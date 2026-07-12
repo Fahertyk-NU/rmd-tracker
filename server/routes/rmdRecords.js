@@ -42,6 +42,67 @@ router.get("/account/:accountId", async (req, res) => {
   }
 });
 
+// POST /api/rmdRecords/newYear -- generate RMD records for a new year
+router.post("/newYear", async (req, res) => {
+  try {
+    const db = getDB();
+    const year = parseInt(req.body.year) || new Date().getFullYear();
+
+    // get all active and inherited accounts
+    const accounts = await db
+      .collection("accounts")
+      .find({
+        status: { $in: ["active", "inherited"] },
+      })
+      .toArray();
+
+    const newRecords = [];
+
+    for (const account of accounts) {
+      // check if a record already exists for this account and year
+      const existing = await db.collection("rmdRecords").findOne({
+        accountId: account._id,
+        year,
+      });
+
+      if (!existing) {
+        newRecords.push({
+          accountId: account._id,
+          clientId: account.clientId,
+          year,
+          rmdAmount: 0, // to be filled in after calling the custodian
+          amountTakenOrProjected: 0,
+          distributionStatus: "pending",
+          autoDistribution: account.autoDistribution,
+          fixedAmount: account.fixedAmount,
+          fixedSchedule: account.fixedSchedule,
+          federalWithholding: account.federalWithholding,
+          stateWithholding: account.stateWithholding,
+          verified: false,
+          verifiedBy: null,
+          verifiedAt: null,
+          lastUpdatedBy: null,
+          lastUpdatedAt: new Date(),
+          notes: "",
+        });
+      }
+    }
+
+    if (newRecords.length === 0) {
+      return res.json({ message: `RMD records for ${year} already exist` });
+    }
+
+    const result = await db.collection("rmdRecords").insertMany(newRecords);
+    res
+      .status(201)
+      .json({
+        message: `Created ${result.insertedCount} new RMD records for ${year}`,
+      });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/rmdRecords/:id
 router.get("/:id", async (req, res) => {
   try {
