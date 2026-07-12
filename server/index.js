@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const { connectDB } = require("./db/conn");
+
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
@@ -24,6 +26,8 @@ app.get("/", (req, res) => {
   res.send("RMD Tracker API");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 });
