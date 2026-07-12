@@ -14,6 +14,49 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /api/accounts/client/:clientId/summary -- accounts with current year RMD record
+router.get("/client/:clientId/summary", async (req, res) => {
+  try {
+    const db = getDB();
+    const year = parseInt(req.query.year) || new Date().getFullYear();
+
+    const accounts = await db
+      .collection("accounts")
+      .aggregate([
+        { $match: { clientId: new ObjectId(req.params.clientId) } },
+        {
+          $lookup: {
+            from: "rmdRecords",
+            let: { accountId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$accountId", "$$accountId"] },
+                      { $eq: ["$year", year] },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: "rmdRecord",
+          },
+        },
+        {
+          $addFields: {
+            rmdRecord: { $arrayElemAt: ["$rmdRecord", 0] },
+          },
+        },
+      ])
+      .toArray();
+
+    res.json(accounts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/accounts/client/:clientId
 router.get("/client/:clientId", async (req, res) => {
   try {
