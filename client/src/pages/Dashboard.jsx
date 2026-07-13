@@ -8,7 +8,6 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     fetch(`/api/dashboard?year=${year}`)
       .then((res) => res.json())
       .then((data) => {
@@ -27,7 +26,10 @@ function Dashboard() {
       <Form.Select
         className="mb-3 w-auto"
         value={year}
-        onChange={(e) => setYear(parseInt(e.target.value))}
+        onChange={(e) => {
+          setLoading(true);
+          setYear(parseInt(e.target.value));
+        }}
       >
         <option value={2024}>2024</option>
         <option value={2025}>2025</option>
