@@ -154,6 +154,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const db = getDB();
+    // eslint-disable-next-line no-unused-vars
     const { _id, ...rest } = req.body;
     const updated = { ...rest, lastUpdatedAt: new Date() };
     updated.distributionStatus = computeRmdStatus(updated);

@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Container, Table, Badge } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
+import StatusBadge from "../components/StatusBadge";
+// eslint-disable-next-line no-unused-vars
+import PropTypes from "prop-types";
 
 function ClientDetail() {
   const { id } = useParams();
@@ -67,38 +70,28 @@ function ClientDetail() {
                   </td>
                   <td>
                     {account.rmdRecord ? (
-                      <Badge
-                        bg={
-                          account.rmdRecord.distributionStatus === "fulfilled"
-                            ? "success"
-                            : account.rmdRecord.distributionStatus ===
-                                "on-track"
-                              ? "primary"
-                              : account.rmdRecord.distributionStatus ===
-                                  "action-required"
-                                ? "danger"
-                                : "warning"
-                        }
-                      >
-                        {account.rmdRecord.distributionStatus}
-                      </Badge>
+                      <StatusBadge
+                        status={account.rmdRecord.distributionStatus}
+                      />
                     ) : (
                       <Badge bg="secondary">No Record</Badge>
                     )}
                   </td>
                   <td>
-                    <Link
-                      to={`/accounts/${account._id}`}
-                      className="btn btn-sm btn-primary me-2"
-                    >
-                      View
-                    </Link>
-                    <Link
-                      to={`/accounts/${account._id}/edit`}
-                      className="btn btn-sm btn-outline-secondary"
-                    >
-                      Edit
-                    </Link>
+                    <div className="d-flex flex-wrap gap-2">
+                      <Link
+                        to={`/accounts/${account._id}`}
+                        className="btn btn-sm btn-primary"
+                      >
+                        View
+                      </Link>
+                      <Link
+                        to={`/accounts/${account._id}/edit`}
+                        className="btn btn-sm btn-outline-secondary"
+                      >
+                        Edit
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -123,6 +116,7 @@ function ClientDetail() {
                     .toLocaleString()}
                 </td>
                 <td></td>
+                <td></td>
               </tr>
             </tfoot>
           </Table>
@@ -134,5 +128,7 @@ function ClientDetail() {
     </Container>
   );
 }
+
+ClientDetail.propTypes = {};
 
 export default ClientDetail;

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
+import PropTypes from "prop-types";
 
 function AccountForm() {
   const { id } = useParams();
@@ -357,5 +359,7 @@ function AccountForm() {
     </Container>
   );
 }
+
+AccountForm.propTypes = {};
 
 export default AccountForm;

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
+import PropTypes from "prop-types";
 
 function RmdRecordForm() {
   const { id } = useParams();
@@ -142,5 +144,7 @@ function RmdRecordForm() {
     </Container>
   );
 }
+
+RmdRecordForm.propTypes = {};
 
 export default RmdRecordForm;

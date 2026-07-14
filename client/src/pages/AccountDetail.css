@@ -1,0 +1,9 @@
+/* AccountDetail styles */
+.account-info-card {
+  margin-bottom: 1rem;
+}
+
+.rmd-amount-cell {
+  cursor: help;
+  text-decoration: underline dotted;
+}

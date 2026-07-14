@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
 import { Navbar, Container, Nav } from "react-bootstrap";
+// eslint-disable-next-line no-unused-vars
+import PropTypes from "prop-types";
+import "./Navbar.css";
 
 function AppNavbar() {
   return (
@@ -23,5 +26,7 @@ function AppNavbar() {
     </Navbar>
   );
 }
+
+Navbar.propTypes = {};
 
 export default AppNavbar;

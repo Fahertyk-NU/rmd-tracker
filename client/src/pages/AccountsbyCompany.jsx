@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Badge, Form, Row, Col } from "react-bootstrap";
+import { Container, Table, Form, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import StatusBadge from "../components/StatusBadge";
+// eslint-disable-next-line no-unused-vars
+import PropTypes from "prop-types";
 
 function AccountsByCompany() {
   const [accounts, setAccounts] = useState([]);
@@ -147,22 +150,11 @@ function AccountsByCompany() {
                 </td>
                 <td>
                   {account.rmdRecord ? (
-                    <Badge
-                      bg={
-                        account.rmdRecord.distributionStatus === "fulfilled"
-                          ? "success"
-                          : account.rmdRecord.distributionStatus === "on-track"
-                            ? "primary"
-                            : account.rmdRecord.distributionStatus ===
-                                "action-required"
-                              ? "danger"
-                              : "warning"
-                      }
-                    >
-                      {account.rmdRecord.distributionStatus}
-                    </Badge>
+                    <StatusBadge
+                      status={account.rmdRecord.distributionStatus}
+                    />
                   ) : (
-                    <Badge bg="secondary">No Record</Badge>
+                    <span className="text-muted">No Record</span>
                   )}
                 </td>
                 <td>
@@ -181,5 +173,7 @@ function AccountsByCompany() {
     </Container>
   );
 }
+
+AccountsByCompany.propTypes = {};
 
 export default AccountsByCompany;

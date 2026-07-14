@@ -2,14 +2,20 @@ import { useState, useEffect } from "react";
 import {
   Container,
   Table,
-  Badge,
   Form,
   Row,
   Col,
   ProgressBar,
   Card,
+  Alert,
+  Collapse,
+  Button,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import StatusBadge from "../components/StatusBadge";
+// eslint-disable-next-line no-unused-vars
+import PropTypes from "prop-types";
+import "./Dashboard.css";
 
 function Dashboard() {
   const [summary, setSummary] = useState([]);
@@ -18,6 +24,7 @@ function Dashboard() {
   const [search, setSearch] = useState("");
   const [filterAdvisor, setFilterAdvisor] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     fetch(`/api/dashboard?year=${year}`)
@@ -50,6 +57,49 @@ function Dashboard() {
   return (
     <Container className="mt-4">
       <h2>RMD Dashboard</h2>
+      <div className="mb-3">
+        <Button
+          variant="outline-secondary"
+          size="sm"
+          onClick={() => setShowHelp(!showHelp)}
+          aria-controls="help-section"
+          aria-expanded={showHelp}
+        >
+          {showHelp ? "Hide Help" : "How to Use"}
+        </Button>
+        <Collapse in={showHelp}>
+          <div id="help-section">
+            <Alert variant="info" className="mt-2">
+              <Alert.Heading>How to Use RMD Tracker</Alert.Heading>
+              <p>
+                RMD Tracker helps financial advisors manage Required Minimum
+                Distributions for clients age 73 and older.
+              </p>
+              <hr />
+              <p className="mb-1">
+                <strong>Dashboard:</strong> View all clients with RMD
+                obligations. Filter by advisor, status, or search by name. The
+                progress bar shows overall completion across all clients.
+              </p>
+              <p className="mb-1">
+                <strong>Client Accounts:</strong> Click a client name to view
+                their accounts and current year RMD status. Total obligation and
+                amount taken are shown at the bottom.
+              </p>
+              <p className="mb-1">
+                <strong>Account Detail:</strong> View account info, distribution
+                settings, and RMD records. Mark auto distribution as verified
+                and log RMD amounts as they are received.
+              </p>
+              <p className="mb-0">
+                <strong>Accounts by Company:</strong> View all accounts sorted
+                by custodian -- useful for batching calls to companies during
+                RMD season.
+              </p>
+            </Alert>
+          </div>
+        </Collapse>
+      </div>
       {!loading &&
         summary.length > 0 &&
         (() => {
@@ -208,19 +258,7 @@ function Dashboard() {
                 <td>${row.totalObligation.toLocaleString()}</td>
                 <td>${row.totalTaken.toLocaleString()}</td>
                 <td>
-                  <Badge
-                    bg={
-                      row.clientStatus === "fulfilled"
-                        ? "success"
-                        : row.clientStatus === "on-track"
-                          ? "primary"
-                          : row.clientStatus === "action-required"
-                            ? "danger"
-                            : "warning"
-                    }
-                  >
-                    {row.clientStatus}
-                  </Badge>
+                  <StatusBadge status={row.clientStatus} />
                 </td>
               </tr>
             ))}
@@ -230,5 +268,7 @@ function Dashboard() {
     </Container>
   );
 }
+
+Dashboard.propTypes = {};
 
 export default Dashboard;

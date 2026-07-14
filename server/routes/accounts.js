@@ -183,6 +183,7 @@ router.put("/:id/verify", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const db = getDB();
+    // eslint-disable-next-line no-unused-vars
     const { _id, ...rest } = req.body;
     const update = { ...rest, lastUpdatedAt: new Date() };
     if (update.clientId) update.clientId = new ObjectId(update.clientId);

@@ -1,0 +1,5 @@
+/* StatusBadge styles */
+.status-badge {
+  text-transform: capitalize;
+  font-size: 0.8rem;
+}

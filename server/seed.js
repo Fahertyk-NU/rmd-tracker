@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient } = require("mongodb");
 
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
