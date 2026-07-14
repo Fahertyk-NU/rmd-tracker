@@ -71,6 +71,59 @@ router.get("/client/:clientId", async (req, res) => {
   }
 });
 
+// GET /api/accounts/byCompany?year=2026 -- all accounts grouped by company with RMD record
+router.get("/byCompany", async (req, res) => {
+  try {
+    const db = getDB();
+    const year = parseInt(req.query.year) || new Date().getFullYear();
+
+    const accounts = await db
+      .collection("accounts")
+      .aggregate([
+        { $match: { status: { $in: ["active", "inherited"] } } },
+        {
+          $lookup: {
+            from: "rmdRecords",
+            let: { accountId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$accountId", "$$accountId"] },
+                      { $eq: ["$year", year] },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: "rmdRecord",
+          },
+        },
+        {
+          $addFields: {
+            rmdRecord: { $arrayElemAt: ["$rmdRecord", 0] },
+          },
+        },
+        {
+          $lookup: {
+            from: "clients",
+            localField: "clientId",
+            foreignField: "_id",
+            as: "client",
+          },
+        },
+        { $unwind: "$client" },
+        { $sort: { company: 1, "client.lastName": 1 } },
+      ])
+      .toArray();
+
+    res.json(accounts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/accounts/:id
 router.get("/:id", async (req, res) => {
   try {
@@ -91,6 +144,7 @@ router.post("/", async (req, res) => {
     const db = getDB();
     const account = {
       ...req.body,
+      clientId: new ObjectId(req.body.clientId),
       createdAt: new Date(),
       lastUpdatedAt: new Date(),
     };
@@ -101,20 +155,45 @@ router.post("/", async (req, res) => {
   }
 });
 
+// PUT /api/accounts/:id/verify -- mark auto distribution as verified
+router.put("/:id/verify", async (req, res) => {
+  try {
+    const db = getDB();
+    const { verifiedBy } = req.body;
+    const result = await db.collection("accounts").updateOne(
+      { _id: new ObjectId(req.params.id) },
+      {
+        $set: {
+          autoDistVerifiedBy: verifiedBy,
+          autoDistVerifiedAt: new Date(),
+          lastUpdatedBy: verifiedBy,
+          lastUpdatedAt: new Date(),
+        },
+      },
+    );
+    if (result.matchedCount === 0)
+      return res.status(404).json({ error: "Account not found" });
+    res.json({ message: "Auto distribution verified" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // PUT /api/accounts/:id
 router.put("/:id", async (req, res) => {
   try {
     const db = getDB();
+    const { _id, ...rest } = req.body;
+    const update = { ...rest, lastUpdatedAt: new Date() };
+    if (update.clientId) update.clientId = new ObjectId(update.clientId);
     const result = await db
       .collection("accounts")
-      .updateOne(
-        { _id: new ObjectId(req.params.id) },
-        { $set: { ...req.body, lastUpdatedAt: new Date() } },
-      );
+      .updateOne({ _id: new ObjectId(req.params.id) }, { $set: update });
     if (result.matchedCount === 0)
       return res.status(404).json({ error: "Account not found" });
     res.json({ message: "Account updated" });
   } catch (err) {
+    console.error("Account PUT error:", err.message);
     res.status(500).json({ error: err.message });
   }
 });

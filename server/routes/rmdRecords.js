@@ -128,7 +128,19 @@ router.post("/", async (req, res) => {
     const db = getDB();
     const record = {
       ...req.body,
-      distributionStatus: computeRmdStatus(req.body),
+      accountId: new ObjectId(req.body.accountId),
+      clientId: new ObjectId(req.body.clientId),
+      year: parseInt(req.body.year),
+      rmdAmount: parseFloat(req.body.rmdAmount),
+      amountTakenOrProjected: parseFloat(req.body.amountTakenOrProjected) || 0,
+      distributionStatus: computeRmdStatus({
+        ...req.body,
+        rmdAmount: parseFloat(req.body.rmdAmount),
+        amountTakenOrProjected:
+          parseFloat(req.body.amountTakenOrProjected) || 0,
+      }),
+      rmdAmountEnteredBy: req.body.rmdAmountEnteredBy || null,
+      rmdAmountEnteredAt: req.body.rmdAmount ? new Date() : null,
       lastUpdatedAt: new Date(),
     };
     const result = await db.collection("rmdRecords").insertOne(record);
@@ -142,8 +154,12 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const db = getDB();
-    const updated = { ...req.body, lastUpdatedAt: new Date() };
+    const { _id, ...rest } = req.body;
+    const updated = { ...rest, lastUpdatedAt: new Date() };
     updated.distributionStatus = computeRmdStatus(updated);
+    if (rest.rmdAmount !== undefined) {
+      updated.rmdAmountEnteredAt = new Date();
+    }
     const result = await db
       .collection("rmdRecords")
       .updateOne({ _id: new ObjectId(req.params.id) }, { $set: updated });

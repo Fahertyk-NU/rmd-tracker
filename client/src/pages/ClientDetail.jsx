@@ -103,6 +103,28 @@ function ClientDetail() {
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr className="table-dark fw-bold">
+                <td colSpan={5}>Total</td>
+                <td>
+                  $
+                  {accounts
+                    .reduce((sum, a) => sum + (a.rmdRecord?.rmdAmount || 0), 0)
+                    .toLocaleString()}
+                </td>
+                <td>
+                  $
+                  {accounts
+                    .reduce(
+                      (sum, a) =>
+                        sum + (a.rmdRecord?.amountTakenOrProjected || 0),
+                      0,
+                    )
+                    .toLocaleString()}
+                </td>
+                <td></td>
+              </tr>
+            </tfoot>
           </Table>
           <Link to={`/accounts/new?clientId=${id}`} className="btn btn-success">
             + Add Account

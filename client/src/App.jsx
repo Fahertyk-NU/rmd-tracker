@@ -5,6 +5,7 @@ import ClientDetail from "./pages/ClientDetail";
 import AccountDetail from "./pages/AccountDetail";
 import AccountForm from "./pages/AccountForm";
 import RmdRecordForm from "./pages/RmdRecordForm";
+import AccountsByCompany from "./pages/AccountsByCompany";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <AppNavbar />
       <Routes>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/accounts/byCompany" element={<AccountsByCompany />} />
         <Route path="/clients/:id" element={<ClientDetail />} />
         <Route path="/accounts/new" element={<AccountForm />} />
         <Route path="/accounts/:id" element={<AccountDetail />} />

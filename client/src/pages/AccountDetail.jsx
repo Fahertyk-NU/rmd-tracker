@@ -8,6 +8,8 @@ function AccountDetail() {
   const [rmdRecords, setRmdRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [verifyName, setVerifyName] = useState("");
+  const [showVerifyInput, setShowVerifyInput] = useState(false);
 
   const handleDeleteAccount = () => {
     if (
@@ -31,6 +33,26 @@ function AccountDetail() {
         })
         .catch((err) => console.error(err));
     }
+  };
+
+  const handleVerify = () => {
+    if (!verifyName.trim()) return;
+    fetch(`/api/accounts/${id}/verify`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ verifiedBy: verifyName }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setAccount((prev) => ({
+          ...prev,
+          autoDistVerifiedBy: verifyName,
+          autoDistVerifiedAt: new Date().toISOString(),
+        }));
+        setShowVerifyInput(false);
+        setVerifyName("");
+      })
+      .catch((err) => console.error(err));
   };
 
   useEffect(() => {
@@ -70,6 +92,9 @@ function AccountDetail() {
       >
         ← Back to Client
       </Link>
+      <Link to={`/accounts/${id}/edit`} className="btn btn-primary mb-3 ms-2">
+        Edit Account
+      </Link>
       <button
         className="btn btn-danger mb-3 ms-2"
         onClick={handleDeleteAccount}
@@ -94,10 +119,61 @@ function AccountDetail() {
         <strong>Auto Distribution:</strong> {account.autoDistribution}
       </p>
       {account.autoDistribution === "fixed" && (
-        <p>
-          <strong>Fixed Amount:</strong> $
-          {account.fixedAmount?.toLocaleString()} / {account.fixedSchedule}
-        </p>
+        <>
+          <p>
+            <strong>Fixed Amount:</strong> $
+            {account.fixedAmount?.toLocaleString()} / {account.fixedSchedule}
+          </p>
+          {account.fixedSchedule === "monthly" && account.distributionDay && (
+            <p>
+              <strong>Distribution Day:</strong> {account.distributionDay} of
+              each month
+            </p>
+          )}
+          {account.fixedSchedule === "annual" && account.distributionDay && (
+            <p>
+              <strong>Distribution Date:</strong>{" "}
+              {new Date(2000, account.distributionMonth - 1, 1).toLocaleString(
+                "default",
+                { month: "long" },
+              )}{" "}
+              {account.distributionDay}
+            </p>
+          )}
+        </>
+      )}
+      <p>
+        <strong>Auto Distribution Last Verified:</strong>{" "}
+        {account.autoDistVerifiedAt
+          ? `${new Date(account.autoDistVerifiedAt).toLocaleDateString()} by ${account.autoDistVerifiedBy}`
+          : "Not yet verified"}{" "}
+        {!showVerifyInput && (
+          <button
+            className="btn btn-sm btn-outline-primary ms-2"
+            onClick={() => setShowVerifyInput(true)}
+          >
+            Mark as Verified
+          </button>
+        )}
+      </p>
+      {showVerifyInput && (
+        <div className="d-flex gap-2 mb-3">
+          <input
+            className="form-control form-control-sm w-auto"
+            placeholder="Your name"
+            value={verifyName}
+            onChange={(e) => setVerifyName(e.target.value)}
+          />
+          <button className="btn btn-sm btn-primary" onClick={handleVerify}>
+            Confirm
+          </button>
+          <button
+            className="btn btn-sm btn-secondary"
+            onClick={() => setShowVerifyInput(false)}
+          >
+            Cancel
+          </button>
+        </div>
       )}
       {account.autoDistribution !== "none" && (
         <>
@@ -109,12 +185,51 @@ function AccountDetail() {
           </p>
         </>
       )}
+      {account.accountType === "Inherited IRA" && (
+        <>
+          <h5 className="mt-3">Inherited IRA Details</h5>
+          <p>
+            <strong>Original Owner:</strong> {account.originalOwnerName}
+          </p>
+          <p>
+            <strong>Original Owner DOB:</strong>{" "}
+            {account.originalOwnerDOB
+              ? new Date(account.originalOwnerDOB).toLocaleDateString()
+              : "—"}
+          </p>
+          <p>
+            <strong>Date of Death:</strong>{" "}
+            {account.dateOfDeath
+              ? new Date(account.dateOfDeath).toLocaleDateString()
+              : "—"}
+          </p>
+          <p>
+            <strong>Beneficiary Relationship:</strong>{" "}
+            {account.beneficiaryRelationship}
+          </p>
+          <p>
+            <strong>Pre-SECURE Act:</strong>{" "}
+            {account.preSecureAct ? "Yes" : "No"}
+          </p>
+          <p>
+            <strong>Original Owner Had Started RMDs:</strong>{" "}
+            {account.originalOwnerRMDStarted ? "Yes" : "No"}
+          </p>
+        </>
+      )}
+
       {account.notes && (
         <p>
           <strong>Notes:</strong> {account.notes}
         </p>
       )}
-
+      {account.lastUpdatedBy && (
+        <p>
+          <strong>Last Updated:</strong>{" "}
+          {new Date(account.lastUpdatedAt).toLocaleDateString()} by{" "}
+          {account.lastUpdatedBy}
+        </p>
+      )}
       <h4 className="mt-4">RMD Records</h4>
       <Table striped bordered hover responsive>
         <thead>
@@ -123,7 +238,6 @@ function AccountDetail() {
             <th>RMD Amount</th>
             <th>Amount Taken/Projected</th>
             <th>Status</th>
-            <th>Verified</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -131,7 +245,17 @@ function AccountDetail() {
           {rmdRecords.map((record) => (
             <tr key={record._id}>
               <td>{record.year}</td>
-              <td>${record.rmdAmount.toLocaleString()}</td>
+              <td>
+                <span
+                  title={
+                    record.rmdAmountEnteredBy
+                      ? `Entered by ${record.rmdAmountEnteredBy} on ${new Date(record.rmdAmountEnteredAt).toLocaleDateString()}`
+                      : "Not yet entered"
+                  }
+                >
+                  ${record.rmdAmount.toLocaleString()}
+                </span>
+              </td>
               <td>${record.amountTakenOrProjected.toLocaleString()}</td>
               <td>
                 <Badge
@@ -146,11 +270,6 @@ function AccountDetail() {
                   }
                 >
                   {record.distributionStatus}
-                </Badge>
-              </td>
-              <td>
-                <Badge bg={record.verified ? "success" : "secondary"}>
-                  {record.verified ? "Yes" : "No"}
                 </Badge>
               </td>
               <td>

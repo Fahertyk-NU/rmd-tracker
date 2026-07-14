@@ -18,6 +18,8 @@ function AccountForm() {
     autoDistribution: "none",
     fixedAmount: "",
     fixedSchedule: "",
+    distributionDay: "",
+    distributionMonth: "",
     federalWithholding: 0,
     stateWithholding: 0,
     notes: "",
@@ -42,6 +44,8 @@ function AccountForm() {
             ...data,
             fixedAmount: data.fixedAmount ?? "",
             fixedSchedule: data.fixedSchedule ?? "",
+            distributionDay: data.distributionDay ?? "",
+            distributionMonth: data.distributionMonth ?? "",
             secondaryAccountNumber: data.secondaryAccountNumber ?? "",
             originalOwnerName: data.originalOwnerName ?? "",
             originalOwnerDOB: data.originalOwnerDOB
@@ -191,6 +195,58 @@ function AccountForm() {
                 <option value="annual">Annual</option>
               </Form.Select>
             </Form.Group>
+            {formData.fixedSchedule === "monthly" && (
+              <Form.Group className="mb-3">
+                <Form.Label>Day of Month</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="distributionDay"
+                  value={formData.distributionDay}
+                  onChange={handleChange}
+                  min={1}
+                  max={31}
+                  placeholder="e.g. 15"
+                />
+              </Form.Group>
+            )}
+            {formData.fixedSchedule === "annual" && (
+              <>
+                <Form.Group className="mb-3">
+                  <Form.Label>Month</Form.Label>
+                  <Form.Select
+                    name="distributionMonth"
+                    value={formData.distributionMonth}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select...</option>
+                    <option value={1}>January</option>
+                    <option value={2}>February</option>
+                    <option value={3}>March</option>
+                    <option value={4}>April</option>
+                    <option value={5}>May</option>
+                    <option value={6}>June</option>
+                    <option value={7}>July</option>
+                    <option value={8}>August</option>
+                    <option value={9}>September</option>
+                    <option value={10}>October</option>
+                    <option value={11}>November</option>
+                    <option value={12}>December</option>
+                  </Form.Select>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Day of Month</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="distributionDay"
+                    value={formData.distributionDay}
+                    onChange={handleChange}
+                    min={1}
+                    max={31}
+                    placeholder="e.g. 15"
+                  />
+                </Form.Group>
+              </>
+            )}
           </>
         )}
 

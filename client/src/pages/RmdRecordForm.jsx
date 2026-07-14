@@ -14,30 +14,26 @@ function RmdRecordForm() {
     year: new Date().getFullYear(),
     rmdAmount: "",
     amountTakenOrProjected: "",
-    distributionStatus: "pending",
-    autoDistribution: "none",
-    fixedAmount: "",
-    fixedSchedule: "",
-    federalWithholding: 0,
-    stateWithholding: 0,
-    verified: false,
-    verifiedBy: "",
+    rmdAmountEnteredBy: "",
     notes: "",
   });
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(isEdit);
 
+  const [recordAccountId, setRecordAccountId] = useState(null);
+
   useEffect(() => {
     if (isEdit) {
       fetch(`/api/rmdRecords/${id}`)
         .then((res) => res.json())
         .then((data) => {
+          setRecordAccountId(data.accountId);
           setFormData({
-            ...data,
-            fixedAmount: data.fixedAmount ?? "",
-            fixedSchedule: data.fixedSchedule ?? "",
-            verifiedBy: data.verifiedBy ?? "",
+            year: data.year,
+            rmdAmount: data.rmdAmount ?? "",
+            amountTakenOrProjected: data.amountTakenOrProjected ?? "",
+            rmdAmountEnteredBy: data.rmdAmountEnteredBy ?? "",
             notes: data.notes ?? "",
           });
           setLoading(false);
@@ -47,11 +43,8 @@ function RmdRecordForm() {
   }, [id, isEdit]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
@@ -68,7 +61,7 @@ function RmdRecordForm() {
       .then((res) => res.json())
       .then(() => {
         navigate(
-          isEdit ? `/accounts/${formData.accountId}` : `/accounts/${accountId}`,
+          isEdit ? `/accounts/${recordAccountId}` : `/accounts/${accountId}`,
         );
       })
       .catch(() => setError("Something went wrong. Please try again."));
@@ -119,100 +112,14 @@ function RmdRecordForm() {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Distribution Status</Form.Label>
-          <Form.Select
-            name="distributionStatus"
-            value={formData.distributionStatus}
-            onChange={handleChange}
-          >
-            <option value="pending">Pending</option>
-            <option value="on-track">On Track</option>
-            <option value="fulfilled">Fulfilled</option>
-            <option value="at-risk">At Risk</option>
-          </Form.Select>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Auto Distribution</Form.Label>
-          <Form.Select
-            name="autoDistribution"
-            value={formData.autoDistribution}
-            onChange={handleChange}
-          >
-            <option value="none">None</option>
-            <option value="full-recalculated">
-              Full RMD Recalculated Annually
-            </option>
-            <option value="fixed">Fixed Amount</option>
-          </Form.Select>
-        </Form.Group>
-
-        {formData.autoDistribution === "fixed" && (
-          <>
-            <Form.Group className="mb-3">
-              <Form.Label>Fixed Amount ($)</Form.Label>
-              <Form.Control
-                type="number"
-                name="fixedAmount"
-                value={formData.fixedAmount}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Schedule</Form.Label>
-              <Form.Select
-                name="fixedSchedule"
-                value={formData.fixedSchedule}
-                onChange={handleChange}
-              >
-                <option value="">Select...</option>
-                <option value="monthly">Monthly</option>
-                <option value="annual">Annual</option>
-              </Form.Select>
-            </Form.Group>
-          </>
-        )}
-
-        <Form.Group className="mb-3">
-          <Form.Label>Federal Withholding (%)</Form.Label>
+          <Form.Label>RMD Amount Entered By</Form.Label>
           <Form.Control
-            type="number"
-            name="federalWithholding"
-            value={formData.federalWithholding}
+            name="rmdAmountEnteredBy"
+            value={formData.rmdAmountEnteredBy}
             onChange={handleChange}
+            placeholder="Your name"
           />
         </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>State Withholding (%)</Form.Label>
-          <Form.Control
-            type="number"
-            name="stateWithholding"
-            value={formData.stateWithholding}
-            onChange={handleChange}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Check
-            type="checkbox"
-            label="Verified"
-            name="verified"
-            checked={formData.verified}
-            onChange={handleChange}
-          />
-        </Form.Group>
-
-        {formData.verified && (
-          <Form.Group className="mb-3">
-            <Form.Label>Verified By</Form.Label>
-            <Form.Control
-              name="verifiedBy"
-              value={formData.verifiedBy}
-              onChange={handleChange}
-            />
-          </Form.Group>
-        )}
 
         <Form.Group className="mb-3">
           <Form.Label>Notes</Form.Label>

@@ -189,13 +189,13 @@ async function seed() {
         const rmdAmount = randInt(3000, 25000);
         const autoDist = account.autoDistribution;
         const amountTaken =
-          autoDist === "full-recalculated"
-            ? rmdAmount
-            : autoDist === "fixed"
-              ? account.fixedSchedule === "monthly"
-                ? account.fixedAmount * 12
-                : account.fixedAmount
-              : randInt(0, rmdAmount);
+          autoDist === "fixed"
+            ? account.fixedSchedule === "monthly"
+              ? account.fixedAmount * 12
+              : account.fixedAmount
+            : autoDist === "none"
+              ? randInt(0, rmdAmount)
+              : 0; // full-recalculated starts at 0, on-track until taken
         const fulfilled = amountTaken >= rmdAmount;
 
         rmdDocs.push({
@@ -203,6 +203,8 @@ async function seed() {
           clientId: account.clientId,
           year,
           rmdAmount,
+          rmdAmountEnteredBy: pick(advisors),
+          rmdAmountEnteredAt: randDate(year, year),
           amountTakenOrProjected: amountTaken,
           distributionStatus: computeRmdStatus({
             rmdAmount,
