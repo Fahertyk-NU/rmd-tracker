@@ -39,6 +39,7 @@ function ClientDetail() {
                 <th>Company</th>
                 <th>Account Type</th>
                 <th>Primary Account #</th>
+                <th>Secondary Account #</th>
                 <th>Auto Distribution</th>
                 <th>RMD Amount</th>
                 <th>Amount Taken</th>
@@ -52,6 +53,7 @@ function ClientDetail() {
                   <td>{account.company}</td>
                   <td>{account.accountType}</td>
                   <td>{account.primaryAccountNumber}</td>
+                  <td>{account.secondaryAccountNumber || "—"}</td>
                   <td>{account.autoDistribution}</td>
                   <td>
                     {account.rmdRecord
@@ -69,9 +71,13 @@ function ClientDetail() {
                         bg={
                           account.rmdRecord.distributionStatus === "fulfilled"
                             ? "success"
-                            : account.rmdRecord.distributionStatus === "at-risk"
-                              ? "danger"
-                              : "warning"
+                            : account.rmdRecord.distributionStatus ===
+                                "on-track"
+                              ? "primary"
+                              : account.rmdRecord.distributionStatus ===
+                                  "action-required"
+                                ? "danger"
+                                : "warning"
                         }
                       >
                         {account.rmdRecord.distributionStatus}

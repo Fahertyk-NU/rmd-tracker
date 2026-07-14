@@ -14,17 +14,83 @@ const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const randDate = (startYear, endYear) => {
   const start = new Date(startYear, 0, 1);
   const end = new Date(endYear, 11, 31);
-  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  return new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime()),
+  );
 };
 
-const firstNames = ["James", "Mary", "Robert", "Patricia", "John", "Jennifer", "Michael", "Linda", "William", "Barbara", "David", "Susan", "Richard", "Jessica", "Joseph", "Sarah", "Thomas", "Karen", "Charles", "Lisa"];
-const lastNames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Wilson", "Taylor", "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Young", "Allen", "King"];
-const advisors = ["Sarah Mitchell", "James Thornton", "Emily Rhodes", "David Chen"];
-const companies = ["Fidelity", "Vanguard", "Schwab", "T. Rowe Price", "American Funds", "BlackRock", "TIAA", "Putnam"];
-const accountTypes = ["Traditional IRA", "Roth IRA", "Inherited IRA", "403b", "401k", "SEP IRA"];
+const firstNames = [
+  "James",
+  "Mary",
+  "Robert",
+  "Patricia",
+  "John",
+  "Jennifer",
+  "Michael",
+  "Linda",
+  "William",
+  "Barbara",
+  "David",
+  "Susan",
+  "Richard",
+  "Jessica",
+  "Joseph",
+  "Sarah",
+  "Thomas",
+  "Karen",
+  "Charles",
+  "Lisa",
+];
+const lastNames = [
+  "Smith",
+  "Johnson",
+  "Williams",
+  "Brown",
+  "Jones",
+  "Garcia",
+  "Miller",
+  "Davis",
+  "Wilson",
+  "Taylor",
+  "Anderson",
+  "Thomas",
+  "Jackson",
+  "White",
+  "Harris",
+  "Martin",
+  "Thompson",
+  "Young",
+  "Allen",
+  "King",
+];
+const advisors = [
+  "Sarah Mitchell",
+  "James Thornton",
+  "Emily Rhodes",
+  "David Chen",
+];
+const companies = [
+  "Fidelity",
+  "Vanguard",
+  "Schwab",
+  "T. Rowe Price",
+  "American Funds",
+  "BlackRock",
+  "TIAA",
+  "Putnam",
+];
+const accountTypes = [
+  "Traditional IRA",
+  "Roth IRA",
+  "Inherited IRA",
+  "403b",
+  "401k",
+  "SEP IRA",
+];
 const autoDistOptions = ["none", "full-recalculated", "fixed"];
 const scheduleOptions = ["monthly", "annual"];
-const statuses = ["pending", "on-track", "fulfilled", "at-risk"];
+
+const { computeRmdStatus } = require("./db/rmdStatus");
 
 async function seed() {
   try {
@@ -48,7 +114,7 @@ async function seed() {
         lastName,
         dateOfBirth: dob,
         email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@email.com`,
-        phone: `207-${randInt(100,999)}-${randInt(1000,9999)}`,
+        phone: `207-${randInt(100, 999)}-${randInt(1000, 9999)}`,
         advisorName: pick(advisors),
         status: pick(["active", "active", "active", "inactive", "deceased"]),
         notes: "",
@@ -74,15 +140,24 @@ async function seed() {
           clientId,
           company: pick(companies),
           primaryAccountNumber: `BD-${randInt(100000, 999999)}`,
-          secondaryAccountNumber: Math.random() > 0.4 ? `${randInt(10000000, 99999999)}` : null,
+          secondaryAccountNumber:
+            Math.random() > 0.4 ? `${randInt(10000000, 99999999)}` : null,
           accountType,
-          status: isInherited ? "inherited" : pick(["active", "active", "active", "inactive"]),
+          status: isInherited
+            ? "inherited"
+            : pick(["active", "active", "active", "inactive"]),
           // inherited IRA fields
-          originalOwnerName: isInherited ? `${pick(firstNames)} ${pick(lastNames)}` : null,
+          originalOwnerName: isInherited
+            ? `${pick(firstNames)} ${pick(lastNames)}`
+            : null,
           originalOwnerDOB: isInherited ? randDate(1930, 1955) : null,
           dateOfDeath,
-          beneficiaryRelationship: isInherited ? pick(["spouse", "non-spouse"]) : null,
-          preSecureAct: isInherited ? (dateOfDeath && dateOfDeath < new Date("2020-01-01")) : null,
+          beneficiaryRelationship: isInherited
+            ? pick(["spouse", "non-spouse"])
+            : null,
+          preSecureAct: isInherited
+            ? dateOfDeath && dateOfDeath < new Date("2020-01-01")
+            : null,
           originalOwnerRMDStarted: isInherited ? pick([true, false]) : null,
           // auto distribution
           autoDistribution: autoDist,
@@ -97,7 +172,9 @@ async function seed() {
         });
       }
     }
-    const accountResult = await db.collection("accounts").insertMany(accountDocs);
+    const accountResult = await db
+      .collection("accounts")
+      .insertMany(accountDocs);
     const accountIds = Object.values(accountResult.insertedIds);
     console.log(`Inserted ${accountIds.length} accounts`);
 
@@ -111,11 +188,14 @@ async function seed() {
       for (const year of years) {
         const rmdAmount = randInt(3000, 25000);
         const autoDist = account.autoDistribution;
-        const amountTaken = autoDist === "full-recalculated"
-          ? rmdAmount
-          : autoDist === "fixed"
-          ? (account.fixedSchedule === "monthly" ? account.fixedAmount * 12 : account.fixedAmount)
-          : randInt(0, rmdAmount);
+        const amountTaken =
+          autoDist === "full-recalculated"
+            ? rmdAmount
+            : autoDist === "fixed"
+              ? account.fixedSchedule === "monthly"
+                ? account.fixedAmount * 12
+                : account.fixedAmount
+              : randInt(0, rmdAmount);
         const fulfilled = amountTaken >= rmdAmount;
 
         rmdDocs.push({
@@ -124,7 +204,13 @@ async function seed() {
           year,
           rmdAmount,
           amountTakenOrProjected: amountTaken,
-          distributionStatus: fulfilled ? "fulfilled" : pick(statuses),
+          distributionStatus: computeRmdStatus({
+            rmdAmount,
+            amountTakenOrProjected: amountTaken,
+            autoDistribution: autoDist,
+            fixedAmount: account.fixedAmount,
+            fixedSchedule: account.fixedSchedule,
+          }),
           autoDistribution: autoDist,
           fixedAmount: account.fixedAmount,
           fixedSchedule: account.fixedSchedule,
@@ -142,7 +228,6 @@ async function seed() {
     const rmdResult = await db.collection("rmdRecords").insertMany(rmdDocs);
     console.log(`Inserted ${rmdResult.insertedCount} RMD records`);
     console.log("Seeding complete!");
-
   } catch (err) {
     console.error(err);
   } finally {

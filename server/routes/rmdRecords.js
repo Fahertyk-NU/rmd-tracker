@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { getDB } = require("../db/conn");
 const { ObjectId } = require("mongodb");
+const { computeRmdStatus } = require("../db/rmdStatus");
 
 // GET /api/rmdRecords
 router.get("/", async (req, res) => {
@@ -70,9 +71,15 @@ router.post("/newYear", async (req, res) => {
           accountId: account._id,
           clientId: account.clientId,
           year,
-          rmdAmount: 0, // to be filled in after calling the custodian
+          rmdAmount: 0,
           amountTakenOrProjected: 0,
-          distributionStatus: "pending",
+          distributionStatus: computeRmdStatus({
+            rmdAmount: 0,
+            amountTakenOrProjected: 0,
+            autoDistribution: account.autoDistribution,
+            fixedAmount: account.fixedAmount,
+            fixedSchedule: account.fixedSchedule,
+          }),
           autoDistribution: account.autoDistribution,
           fixedAmount: account.fixedAmount,
           fixedSchedule: account.fixedSchedule,
@@ -93,11 +100,9 @@ router.post("/newYear", async (req, res) => {
     }
 
     const result = await db.collection("rmdRecords").insertMany(newRecords);
-    res
-      .status(201)
-      .json({
-        message: `Created ${result.insertedCount} new RMD records for ${year}`,
-      });
+    res.status(201).json({
+      message: `Created ${result.insertedCount} new RMD records for ${year}`,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -121,7 +126,11 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const db = getDB();
-    const record = { ...req.body, lastUpdatedAt: new Date() };
+    const record = {
+      ...req.body,
+      distributionStatus: computeRmdStatus(req.body),
+      lastUpdatedAt: new Date(),
+    };
     const result = await db.collection("rmdRecords").insertOne(record);
     res.status(201).json(result);
   } catch (err) {
@@ -133,12 +142,11 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const db = getDB();
+    const updated = { ...req.body, lastUpdatedAt: new Date() };
+    updated.distributionStatus = computeRmdStatus(updated);
     const result = await db
       .collection("rmdRecords")
-      .updateOne(
-        { _id: new ObjectId(req.params.id) },
-        { $set: { ...req.body, lastUpdatedAt: new Date() } },
-      );
+      .updateOne({ _id: new ObjectId(req.params.id) }, { $set: updated });
     if (result.matchedCount === 0)
       return res.status(404).json({ error: "RMD record not found" });
     res.json({ message: "RMD record updated" });

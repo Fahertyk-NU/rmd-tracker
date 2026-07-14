@@ -16,11 +16,35 @@ router.get("/", async (req, res) => {
           _id: "$clientId",
           totalObligation: { $sum: "$rmdAmount" },
           totalTaken: { $sum: "$amountTakenOrProjected" },
+          statuses: { $push: "$distributionStatus" },
         },
       },
       {
         $addFields: {
-          fulfilled: { $gte: ["$totalTaken", "$totalObligation"] },
+          clientStatus: {
+            $switch: {
+              branches: [
+                // any action-required -> action-required
+                {
+                  case: { $in: ["action-required", "$statuses"] },
+                  then: "action-required",
+                },
+                // total taken >= total obligation -> fulfilled
+                {
+                  case: {
+                    $gte: ["$totalTaken", "$totalObligation"],
+                  },
+                  then: "fulfilled",
+                },
+                // any on-track and no action-required -> on-track
+                {
+                  case: { $in: ["on-track", "$statuses"] },
+                  then: "on-track",
+                },
+              ],
+              default: "pending",
+            },
+          },
         },
       },
       {
@@ -37,14 +61,19 @@ router.get("/", async (req, res) => {
           _id: 1,
           totalObligation: 1,
           totalTaken: 1,
-          fulfilled: 1,
+          clientStatus: 1,
           "client.firstName": 1,
           "client.lastName": 1,
           "client.advisorName": 1,
           "client.status": 1,
         },
       },
-      { $sort: { fulfilled: 1, totalObligation: -1 } },
+      {
+        $sort: {
+          clientStatus: 1,
+          totalObligation: -1,
+        },
+      },
     ]).toArray();
 
     res.json(summary);

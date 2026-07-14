@@ -1,12 +1,37 @@
 import { useState, useEffect } from "react";
 import { Container, Table, Badge } from "react-bootstrap";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 function AccountDetail() {
   const { id } = useParams();
   const [account, setAccount] = useState(null);
   const [rmdRecords, setRmdRecords] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const handleDeleteAccount = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this account? This cannot be undone.",
+      )
+    ) {
+      fetch(`/api/accounts/${id}`, { method: "DELETE" })
+        .then((res) => res.json())
+        .then(() => navigate(`/clients/${account.clientId}`))
+        .catch((err) => console.error(err));
+    }
+  };
+
+  const handleDeleteRmdRecord = (recordId) => {
+    if (window.confirm("Are you sure you want to delete this RMD record?")) {
+      fetch(`/api/rmdRecords/${recordId}`, { method: "DELETE" })
+        .then((res) => res.json())
+        .then(() => {
+          setRmdRecords((prev) => prev.filter((r) => r._id !== recordId));
+        })
+        .catch((err) => console.error(err));
+    }
+  };
 
   useEffect(() => {
     Promise.all([
@@ -45,6 +70,12 @@ function AccountDetail() {
       >
         ← Back to Client
       </Link>
+      <button
+        className="btn btn-danger mb-3 ms-2"
+        onClick={handleDeleteAccount}
+      >
+        Delete Account
+      </button>
       <h2>
         {account.company} — {account.accountType}
       </h2>
@@ -68,12 +99,16 @@ function AccountDetail() {
           {account.fixedAmount?.toLocaleString()} / {account.fixedSchedule}
         </p>
       )}
-      <p>
-        <strong>Federal Withholding:</strong> {account.federalWithholding}%
-      </p>
-      <p>
-        <strong>State Withholding:</strong> {account.stateWithholding}%
-      </p>
+      {account.autoDistribution !== "none" && (
+        <>
+          <p>
+            <strong>Federal Withholding:</strong> {account.federalWithholding}%
+          </p>
+          <p>
+            <strong>State Withholding:</strong> {account.stateWithholding}%
+          </p>
+        </>
+      )}
       {account.notes && (
         <p>
           <strong>Notes:</strong> {account.notes}
@@ -103,9 +138,11 @@ function AccountDetail() {
                   bg={
                     record.distributionStatus === "fulfilled"
                       ? "success"
-                      : record.distributionStatus === "at-risk"
-                        ? "danger"
-                        : "warning"
+                      : record.distributionStatus === "on-track"
+                        ? "primary"
+                        : record.distributionStatus === "action-required"
+                          ? "danger"
+                          : "warning"
                   }
                 >
                   {record.distributionStatus}
@@ -119,10 +156,16 @@ function AccountDetail() {
               <td>
                 <Link
                   to={`/rmdRecords/${record._id}/edit`}
-                  className="btn btn-sm btn-outline-secondary"
+                  className="btn btn-sm btn-outline-secondary me-2"
                 >
                   Edit
                 </Link>
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={() => handleDeleteRmdRecord(record._id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
