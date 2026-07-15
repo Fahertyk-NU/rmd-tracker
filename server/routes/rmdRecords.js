@@ -157,6 +157,10 @@ router.put("/:id", async (req, res) => {
     // eslint-disable-next-line no-unused-vars
     const { _id, ...rest } = req.body;
     const updated = { ...rest, lastUpdatedAt: new Date() };
+    updated.year = parseInt(updated.year);
+    updated.rmdAmount = parseFloat(updated.rmdAmount);
+    updated.amountTakenOrProjected =
+      parseFloat(updated.amountTakenOrProjected) || 0;
     updated.distributionStatus = computeRmdStatus(updated);
     if (rest.rmdAmount !== undefined) {
       updated.rmdAmountEnteredAt = new Date();

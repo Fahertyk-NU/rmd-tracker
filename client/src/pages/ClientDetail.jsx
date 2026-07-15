@@ -147,7 +147,7 @@ function ClientDetail() {
                     <td>{account.autoDistribution}</td>
                     <td>
                       {account.rmdRecord
-                        ? `$${account.rmdRecord.rmdAmount.toLocaleString()}`
+                        ? `$${Number(account.rmdRecord.rmdAmount).toLocaleString()}`
                         : "—"}
                     </td>
                     <td>
@@ -200,7 +200,8 @@ function ClientDetail() {
                     {accounts
                       .reduce(
                         (sum, a) =>
-                          sum + (a.rmdRecord?.amountTakenOrProjected || 0),
+                          sum +
+                          Number(a.rmdRecord?.amountTakenOrProjected || 0),
                         0,
                       )
                       .toLocaleString()}
