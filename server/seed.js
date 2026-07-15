@@ -1,5 +1,6 @@
 require("dotenv").config();
 const { MongoClient } = require("mongodb");
+const bcrypt = require("bcryptjs");
 
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
@@ -229,6 +230,24 @@ async function seed() {
     }
     const rmdResult = await db.collection("rmdRecords").insertMany(rmdDocs);
     console.log(`Inserted ${rmdResult.insertedCount} RMD records`);
+
+    // --- DEMO USER ---
+    // shared login for the whole app -- upsert so re-seeding doesn't
+    // invalidate existing sessions or require re-hashing every run
+    const hashedPassword = await bcrypt.hash("password123", 10);
+    await db.collection("users").updateOne(
+      { email: "demo@rmdtracker.com" },
+      {
+        $set: {
+          email: "demo@rmdtracker.com",
+          password: hashedPassword,
+          name: "Demo Advisor",
+        },
+      },
+      { upsert: true },
+    );
+    console.log("Demo user ready: demo@rmdtracker.com / password123");
+
     console.log("Seeding complete!");
   } catch (err) {
     console.error(err);

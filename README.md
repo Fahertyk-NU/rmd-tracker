@@ -32,7 +32,7 @@ RMD Tracker centralizes this workflow into a single dashboard where advisors and
 
 ### Prerequisites
 
-- Node.js v18+
+- Node.js v20.19+
 - MongoDB Atlas account
 
 ### Setup
@@ -88,8 +88,10 @@ npm run dev
 
 7. Open http://localhost:5173 in your browser.
 
+8. Log in using the [demo credentials](#demo-credentials) above.
+
 ## AI Usage Disclosure
 
 **Kaylee Faherty:** Claude Sonnet (Anthropic, claude-sonnet-4-6) was used throughout this project as a learning guide and coding assistant. It was used to explain concepts, talk through architectural decisions, troubleshoot errors, and suggest approaches as I built out the Express/MongoDB backend, React frontend, and CSS. All generated code was carefully reviewed, tested, and understood before being committed. Key prompts included project planning, setting up the Express/MongoDB architecture, implementing CRUD routes, designing the RMD status logic and aggregation pipeline, and building the accounts by company workflow view. Domain knowledge and all financial services concepts came from my own professional experience.
 
-**Haotian Qian** [To be completed by Haotian]
+**Haotian Qian:** Claude was used throughout this project as a learning guide and coding assistant. It was used to explain concepts, talk through architectural decisions, troubleshoot errors, and suggest approaches as I built out the clients CRUD routes and pages, fixed the dashboard aggregation logic. All generated code was carefully reviewed, tested, and understood before being committed.

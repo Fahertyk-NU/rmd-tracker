@@ -9,15 +9,32 @@ router.get("/", async (req, res) => {
     const year = parseInt(req.query.year) || new Date().getFullYear();
 
     const summary = await db
-      .collection("rmdRecords")
+      .collection("clients")
       .aggregate([
-        { $match: { year } },
         {
-          $group: {
-            _id: "$clientId",
-            totalObligation: { $sum: "$rmdAmount" },
-            totalTaken: { $sum: "$amountTakenOrProjected" },
-            statuses: { $push: "$distributionStatus" },
+          $lookup: {
+            from: "rmdRecords",
+            let: { clientId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$clientId", "$$clientId"] },
+                      { $eq: ["$year", year] },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: "records",
+          },
+        },
+        {
+          $addFields: {
+            totalObligation: { $sum: "$records.rmdAmount" },
+            totalTaken: { $sum: "$records.amountTakenOrProjected" },
+            statuses: "$records.distributionStatus",
           },
         },
         {
@@ -30,10 +47,13 @@ router.get("/", async (req, res) => {
                     case: { $in: ["action-required", "$statuses"] },
                     then: "action-required",
                   },
-                  // total taken >= total obligation -> fulfilled
+                  // total taken >= total obligation (and there is an obligation) -> fulfilled
                   {
                     case: {
-                      $gte: ["$totalTaken", "$totalObligation"],
+                      $and: [
+                        { $gt: ["$totalObligation", 0] },
+                        { $gte: ["$totalTaken", "$totalObligation"] },
+                      ],
                     },
                     then: "fulfilled",
                   },
@@ -49,24 +69,17 @@ router.get("/", async (req, res) => {
           },
         },
         {
-          $lookup: {
-            from: "clients",
-            localField: "_id",
-            foreignField: "_id",
-            as: "client",
-          },
-        },
-        { $unwind: "$client" },
-        {
           $project: {
             _id: 1,
             totalObligation: 1,
             totalTaken: 1,
             clientStatus: 1,
-            "client.firstName": 1,
-            "client.lastName": 1,
-            "client.advisorName": 1,
-            "client.status": 1,
+            client: {
+              firstName: "$firstName",
+              lastName: "$lastName",
+              advisorName: "$advisorName",
+              status: "$status",
+            },
           },
         },
         {

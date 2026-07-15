@@ -67,6 +67,9 @@ function Dashboard() {
         >
           {showHelp ? "Hide Help" : "How to Use"}
         </Button>
+        <Link to="/clients/new" className="btn btn-success btn-sm ms-2">
+          + Add Client
+        </Link>
         <Collapse in={showHelp}>
           <div id="help-section">
             <Alert variant="info" className="mt-2">

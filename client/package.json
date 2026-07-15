@@ -10,14 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^6.0.3",
     "bootstrap": "^5.3.3",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.18.1",
-    "vite": "^8.1.1",
-    "@vitejs/plugin-react": "^6.0.3"
+    "vite": "^8.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

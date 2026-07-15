@@ -3,8 +3,9 @@ require("dotenv").config();
 const { connectDB } = require("./db/conn");
 const express = require("express");
 const session = require("express-session");
-const passport = require("passport");
+const passport = require("./passport");
 const path = require("path");
+const { requireAuth } = require("./middleware/auth");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,13 +24,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // API routes
+const authRouter = require("./routes/auth");
 const accountsRouter = require("./routes/accounts");
 const rmdRecordsRouter = require("./routes/rmdRecords");
 const dashboardRouter = require("./routes/dashboard");
+const clientsRouter = require("./routes/clients");
 
-app.use("/api/accounts", accountsRouter);
-app.use("/api/rmdRecords", rmdRecordsRouter);
-app.use("/api/dashboard", dashboardRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/accounts", requireAuth, accountsRouter);
+app.use("/api/rmdRecords", requireAuth, rmdRecordsRouter);
+app.use("/api/dashboard", requireAuth, dashboardRouter);
+app.use("/api/clients", requireAuth, clientsRouter);
 
 // Serve React frontend in production
 if (process.env.NODE_ENV === "production") {

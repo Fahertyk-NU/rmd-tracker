@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0",
     "nodemon": "^3.1.14"
   }
 }
