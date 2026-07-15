@@ -14,6 +14,7 @@ function AccountDetail() {
   const navigate = useNavigate();
   const [verifyName, setVerifyName] = useState("");
   const [showVerifyInput, setShowVerifyInput] = useState(false);
+  const [client, setClient] = useState(null);
 
   const handleDeleteAccount = () => {
     if (
@@ -67,6 +68,13 @@ function AccountDetail() {
       .then(([accountData, recordsData]) => {
         setAccount(accountData);
         setRmdRecords(recordsData);
+        // fetch client name once we have the account
+        return fetch(`/api/clients/${accountData.clientId}`).then((res) =>
+          res.json(),
+        );
+      })
+      .then((clientData) => {
+        setClient(clientData);
         setLoading(false);
       })
       .catch((err) => {
@@ -105,6 +113,20 @@ function AccountDetail() {
       >
         Delete Account
       </button>
+      {client && (
+        <Card className="mb-3">
+          <Card.Body className="py-2">
+            <strong>
+              {client.firstName} {client.lastName}
+            </strong>
+            {client.advisorName && (
+              <span className="text-muted ms-3">
+                Advisor: {client.advisorName}
+              </span>
+            )}
+          </Card.Body>
+        </Card>
+      )}
       <h2>
         {account.company} — {account.accountType}
       </h2>

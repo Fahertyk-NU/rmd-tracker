@@ -187,6 +187,7 @@ router.put("/:id", async (req, res) => {
     const { _id, ...rest } = req.body;
     const update = { ...rest, lastUpdatedAt: new Date() };
     if (update.clientId) update.clientId = new ObjectId(update.clientId);
+    if (req.user) update.lastUpdatedBy = req.user.email;
     const result = await db
       .collection("accounts")
       .updateOne({ _id: new ObjectId(req.params.id) }, { $set: update });
@@ -194,7 +195,6 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ error: "Account not found" });
     res.json({ message: "Account updated" });
   } catch (err) {
-    console.error("Account PUT error:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
