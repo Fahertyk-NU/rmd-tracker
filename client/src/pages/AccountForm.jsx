@@ -18,6 +18,7 @@ function AccountForm() {
     accountType: "Traditional IRA",
     status: "active",
     autoDistribution: "none",
+    fullRecalcDate: "",
     fixedAmount: "",
     fixedSchedule: "",
     distributionDay: "",
@@ -44,6 +45,9 @@ function AccountForm() {
         .then((data) => {
           setFormData({
             ...data,
+            fullRecalcDate: data.fullRecalcDate
+              ? data.fullRecalcDate.slice(0, 10)
+              : "",
             fixedAmount: data.fixedAmount ?? "",
             fixedSchedule: data.fixedSchedule ?? "",
             distributionDay: data.distributionDay ?? "",
@@ -173,7 +177,17 @@ function AccountForm() {
             <option value="fixed">Fixed Amount</option>
           </Form.Select>
         </Form.Group>
-
+        {formData.autoDistribution === "full-recalculated" && (
+          <Form.Group className="mb-3">
+            <Form.Label>Expected Distribution Date</Form.Label>
+            <Form.Control
+              type="date"
+              name="fullRecalcDate"
+              value={formData.fullRecalcDate}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        )}
         {formData.autoDistribution === "fixed" && (
           <>
             <Form.Group className="mb-3">

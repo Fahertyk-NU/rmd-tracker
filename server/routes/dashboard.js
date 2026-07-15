@@ -35,6 +35,64 @@ router.get("/", async (req, res) => {
             totalObligation: { $sum: "$records.rmdAmount" },
             totalTaken: { $sum: "$records.amountTakenOrProjected" },
             statuses: "$records.distributionStatus",
+            totalProjected: {
+              $sum: {
+                $map: {
+                  input: "$records",
+                  as: "r",
+                  in: {
+                    $cond: [
+                      {
+                        $gte: ["$$r.amountTakenOrProjected", "$$r.rmdAmount"],
+                      },
+                      "$$r.amountTakenOrProjected",
+                      {
+                        $cond: [
+                          {
+                            $or: [
+                              {
+                                $eq: [
+                                  "$$r.autoDistribution",
+                                  "full-recalculated",
+                                ],
+                              },
+                              {
+                                $and: [
+                                  {
+                                    $eq: ["$$r.autoDistribution", "fixed"],
+                                  },
+                                  {
+                                    $gte: [
+                                      {
+                                        $cond: [
+                                          {
+                                            $eq: [
+                                              "$$r.fixedSchedule",
+                                              "monthly",
+                                            ],
+                                          },
+                                          {
+                                            $multiply: ["$$r.fixedAmount", 12],
+                                          },
+                                          "$$r.fixedAmount",
+                                        ],
+                                      },
+                                      "$$r.rmdAmount",
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                          "$$r.rmdAmount",
+                          "$$r.amountTakenOrProjected",
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
+            },
           },
         },
         {
@@ -42,12 +100,6 @@ router.get("/", async (req, res) => {
             clientStatus: {
               $switch: {
                 branches: [
-                  // any action-required -> action-required
-                  {
-                    case: { $in: ["action-required", "$statuses"] },
-                    then: "action-required",
-                  },
-                  // total taken >= total obligation (and there is an obligation) -> fulfilled
                   {
                     case: {
                       $and: [
@@ -57,10 +109,18 @@ router.get("/", async (req, res) => {
                     },
                     then: "fulfilled",
                   },
-                  // any on-track and no action-required -> on-track
                   {
-                    case: { $in: ["on-track", "$statuses"] },
+                    case: {
+                      $and: [
+                        { $gt: ["$totalObligation", 0] },
+                        { $gte: ["$totalProjected", "$totalObligation"] },
+                      ],
+                    },
                     then: "on-track",
+                  },
+                  {
+                    case: { $in: ["action-required", "$statuses"] },
+                    then: "action-required",
                   },
                 ],
                 default: "pending",

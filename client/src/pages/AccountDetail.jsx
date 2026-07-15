@@ -174,6 +174,13 @@ function AccountDetail() {
               <p className="mb-2">
                 <strong>Auto Distribution:</strong> {account.autoDistribution}
               </p>
+              {account.autoDistribution === "full-recalculated" &&
+                account.fullRecalcDate && (
+                  <p className="mb-2">
+                    <strong>Expected Distribution Date:</strong>{" "}
+                    {new Date(account.fullRecalcDate).toLocaleDateString()}
+                  </p>
+                )}
               {account.autoDistribution === "fixed" && (
                 <>
                   <p className="mb-2">

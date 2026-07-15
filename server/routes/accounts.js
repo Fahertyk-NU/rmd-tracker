@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { getDB } = require("../db/conn");
 const { ObjectId } = require("mongodb");
+const { computeRmdStatus } = require("../db/rmdStatus");
 
 // GET /api/accounts
 router.get("/", async (req, res) => {
@@ -51,7 +52,65 @@ router.get("/client/:clientId/summary", async (req, res) => {
       ])
       .toArray();
 
-    res.json(accounts);
+    // calculate client totals
+    const totalObligation = accounts.reduce(
+      (sum, a) => sum + (a.rmdRecord?.rmdAmount || 0),
+      0,
+    );
+    const totalTaken = accounts.reduce(
+      (sum, a) => sum + (a.rmdRecord?.amountTakenOrProjected || 0),
+      0,
+    );
+
+    // projected total includes rmd amounts for auto dist accounts
+    const totalProjected = accounts.reduce((sum, a) => {
+      const record = a.rmdRecord;
+      if (!record) return sum;
+      // for full-recalculated, project the full rmd amount
+      if (record.autoDistribution === "full-recalculated") {
+        return sum + (record.rmdAmount || 0);
+      }
+      // for fixed where projected covers rmd, project the rmd amount
+      if (record.autoDistribution === "fixed" && record.fixedAmount) {
+        const annualProjected =
+          record.fixedSchedule === "monthly"
+            ? record.fixedAmount * 12
+            : record.fixedAmount;
+        if (annualProjected >= record.rmdAmount) {
+          return sum + (record.rmdAmount || 0);
+        }
+      }
+      // for everything else use actual amount taken
+      return sum + (record.amountTakenOrProjected || 0);
+    }, 0);
+
+    // client is on-track if projected total >= obligation
+    const clientOnTrack =
+      totalObligation > 0 && totalProjected >= totalObligation;
+    // client is fulfilled if actual taken >= obligation
+    const clientFulfilled =
+      totalObligation > 0 && totalTaken >= totalObligation;
+
+    const result = accounts.map((account) => {
+      if (account.rmdRecord) {
+        if (clientFulfilled) {
+          account.rmdRecord.distributionStatus = "fulfilled";
+        } else if (
+          clientOnTrack &&
+          account.rmdRecord.distributionStatus === "action-required"
+        ) {
+          // if client is on-track overall, bump action-required accounts to on-track
+          account.rmdRecord.distributionStatus = "on-track";
+        } else {
+          account.rmdRecord.distributionStatus = computeRmdStatus(
+            account.rmdRecord,
+          );
+        }
+      }
+      return account;
+    });
+
+    res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
