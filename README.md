@@ -54,9 +54,11 @@ npm install
 
 3. Create a `.env` file in the `server` folder:
 
+```
 MONGO_URI=your_mongodb_connection_string
 
 SESSION_SECRET=your_secret_here
+```
 
 4. Seed the database:
 
