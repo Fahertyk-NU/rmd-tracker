@@ -4,6 +4,7 @@
 **Class:** [CS5610 Web Development – Northeastern University](https://johnguerra.co/classes/webDevelopment_online_summer_2026/)
 **Deployed App:** https://rmd-tracker.onrender.com
 **Design Document:** [View Design Document](DESIGN.pdf)
+**Narrated Demo:** https://youtu.be/fJpINUp61VE
 
 ## Project Objective
 
