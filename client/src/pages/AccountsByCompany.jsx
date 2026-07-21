@@ -37,7 +37,7 @@ function AccountsByCompany() {
     return matchesCompany && matchesStatus;
   });
 
-  const sorted = [...filtered].sort((a, b) => {
+  const sorted = [...filtered].sort((a, b) => { //nice comparator!
     switch (sortBy) {
       case "company":
         return a.company.localeCompare(b.company);
