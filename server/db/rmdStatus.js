@@ -1,3 +1,6 @@
+/*
+ * Delimit the statuses with space instead of hyphen for readability and make first letter uppercase.
+ */
 function computeRmdStatus(record) {
   const {
     rmdAmount,
