@@ -84,6 +84,7 @@ function ClientForm() {
             value={formData.firstName}
             onChange={handleChange}
             required
+            //can be just be a whitespace string: "   "
           />
         </Form.Group>
 
@@ -93,6 +94,7 @@ function ClientForm() {
             name="lastName"
             value={formData.lastName}
             onChange={handleChange}
+            //can be just be a whitespace string: "   "
             required
           />
         </Form.Group>
@@ -104,6 +106,7 @@ function ClientForm() {
             name="dateOfBirth"
             value={formData.dateOfBirth}
             onChange={handleChange}
+            //DOB can be in the future
           />
         </Form.Group>
 
@@ -123,6 +126,7 @@ function ClientForm() {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
+            //No validation for proper phone number
           />
         </Form.Group>
 
@@ -132,6 +136,7 @@ function ClientForm() {
             name="advisorName"
             value={formData.advisorName}
             onChange={handleChange}
+            //Should this not be a dropdown with advisor names populated from the DB?
           />
         </Form.Group>
 

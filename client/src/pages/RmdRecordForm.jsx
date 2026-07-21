@@ -120,6 +120,8 @@ function RmdRecordForm() {
             value={formData.rmdAmountEnteredBy}
             onChange={handleChange}
             placeholder="Your name"
+            //Should this not be a dropdown with advisor names populated from the DB?
+            //IFF only advisor can enter RMD records and client has an advisor.
           />
         </Form.Group>
 
