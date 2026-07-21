@@ -18,6 +18,9 @@ import AccountForm from "./pages/AccountForm";
 import RmdRecordForm from "./pages/RmdRecordForm";
 import AccountsByCompany from "./pages/AccountsByCompany";
 
+/*
+ * FIXME: Delete this, handle redirects using middleware.
+ */
 function ProtectedLayout({ user, onLogout }) {
   if (!user) return <Navigate to="/login" replace />;
   return (
@@ -78,6 +81,8 @@ function App() {
           <Route path="/accounts/:id/edit" element={<AccountForm />} />
           <Route path="/rmdRecords/new" element={<RmdRecordForm />} />
           <Route path="/rmdRecords/:id/edit" element={<RmdRecordForm />} />
+          //add login page route
+          //add 
         </Route>
       </Routes>
     </BrowserRouter>

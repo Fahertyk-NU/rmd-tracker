@@ -39,6 +39,18 @@ app.use("/api/clients", requireAuth, clientsRouter);
 // Serve React frontend in production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/dist")));
+  
+  /**
+   * Specify the SPA pages that require auth here
+   * by invoking app.get with
+   *  1. the path to your page as the first arg
+   *  2. passing requireAuth middleware as the second arg
+   *  3. finally passing the RequestHandler serving index.html
+   */
+
+  /**
+   * Serve the catchall for all other routes, then have ReactRouter serve a 404/Not found page
+   */
   app.get("*splat", (req, res) => {
     res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
   });
