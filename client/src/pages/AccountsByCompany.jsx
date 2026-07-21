@@ -37,7 +37,7 @@ function AccountsByCompany() {
     return matchesCompany && matchesStatus;
   });
 
-  const sorted = [...filtered].sort((a, b) => {
+  const sorted = [...filtered].sort((a, b) => { //nice comparator!
     switch (sortBy) {
       case "company":
         return a.company.localeCompare(b.company);
@@ -45,7 +45,7 @@ function AccountsByCompany() {
         return a.client.lastName.localeCompare(b.client.lastName);
       case "status":
         return (a.rmdRecord?.distributionStatus || "pending").localeCompare(
-          b.rmdRecord?.distributionStatus || "pending",
+          b.rmdRecord?.distributionStatus || "pending"
         );
       case "autoDistribution":
         return a.autoDistribution.localeCompare(b.autoDistribution);
@@ -68,6 +68,8 @@ function AccountsByCompany() {
               setYear(parseInt(e.target.value));
             }}
           >
+            // why are these hardcoded in and not populated as unique values
+            from the db?
             <option value={2024}>2024</option>
             <option value={2025}>2025</option>
             <option value={2026}>2026</option>

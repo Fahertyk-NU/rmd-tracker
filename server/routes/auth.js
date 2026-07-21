@@ -2,6 +2,12 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
+/**
+ * Add Register, Update and Delete oprations to Auth routes
+ * and make different account types like Advisor, AdvisorManager, Client
+ * you may have to embed/nest documents in your other collections into ones that certain Advisors "own"
+ */
+
 // POST /api/auth/login
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
