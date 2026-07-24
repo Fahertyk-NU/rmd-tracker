@@ -1,4 +1,10 @@
-/* Dashboard styles */
-.dashboard-help-btn {
-  font-size: 0.85rem;
+.page-title {
+  font-size: var(--text-page-title);
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  font-size: var(--text-small);
+  margin-bottom: 0;
 }

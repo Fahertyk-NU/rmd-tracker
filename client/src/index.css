@@ -1,0 +1,56 @@
+:root {
+  --bs-font-sans-serif: "Inter", system-ui, sans-serif;
+  --color-brand-primary: #0b5563;
+  --color-status-success: #2e7d4f;
+  --color-status-info: #356e99;
+  --color-status-danger: #b3541e;
+  --bs-warning-rgb: 148, 106, 0;
+  --bs-success-rgb: 46, 125, 79;
+  --bs-info-rgb: 53, 110, 153;
+  --bs-danger-rgb: 179, 84, 30;
+  --bs-warning-rgb: 224, 164, 88;
+  --bs-primary-rgb: 11, 85, 99;
+
+  /* Spacing scale */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+
+  /* Typography scale */
+  --text-page-title: 1.75rem;
+  --text-section-heading: 1.25rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+}
+
+body {
+  font-family: var(--bs-font-sans-serif);
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--color-brand-primary);
+  --bs-btn-border-color: var(--color-brand-primary);
+  --bs-btn-hover-bg: #094650;
+  --bs-btn-hover-border-color: #094650;
+  --bs-btn-active-bg: #073a42;
+  --bs-btn-active-border-color: #073a42;
+}
+
+.btn-success {
+  --bs-btn-bg: var(--color-status-success);
+  --bs-btn-border-color: var(--color-status-success);
+}
+
+.btn-danger {
+  --bs-btn-bg: var(--color-status-danger);
+  --bs-btn-border-color: var(--color-status-danger);
+}
+
+a {
+  color: var(--color-brand-primary);
+}
+a:hover {
+  color: #073a42;
+}

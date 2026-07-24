@@ -5,13 +5,15 @@ import "./StatusBadge.css";
 function StatusBadge({ status }) {
   const variantMap = {
     fulfilled: "success",
-    "on-track": "primary",
+    "on-track": "info",
     "action-required": "danger",
     pending: "warning",
   };
 
   return (
-    <Badge bg={variantMap[status] || "secondary"}>{status || "unknown"}</Badge>
+    <Badge bg={variantMap[status] || "secondary"} className="status-badge">
+      {status}
+    </Badge>
   );
 }
 

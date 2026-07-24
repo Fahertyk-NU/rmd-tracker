@@ -55,9 +55,15 @@ function Dashboard() {
   });
 
   return (
-    <Container className="mt-4">
-      <h2>RMD Dashboard</h2>
-      <div className="mb-3">
+    <Container className="mt-4 mb-5">
+      <div className="mb-2">
+        <h2 className="page-title">Required Minimum Distribution Dashboard</h2>
+        <p className="page-subtitle text-muted">
+          Tracking {year} distributions across {summary.length} clients
+        </p>
+      </div>
+
+      <div className="mb-4">
         <Button
           variant="outline-secondary"
           size="sm"
@@ -103,91 +109,94 @@ function Dashboard() {
           </div>
         </Collapse>
       </div>
-      {!loading &&
-        summary.length > 0 &&
-        (() => {
-          const counts = {
-            pending: summary.filter((r) => r.clientStatus === "pending").length,
-            "action-required": summary.filter(
-              (r) => r.clientStatus === "action-required",
-            ).length,
-            "on-track": summary.filter((r) => r.clientStatus === "on-track")
-              .length,
-            fulfilled: summary.filter((r) => r.clientStatus === "fulfilled")
-              .length,
-          };
-          const total = summary.length;
+      <div className="mb-5">
+        {!loading &&
+          summary.length > 0 &&
+          (() => {
+            const counts = {
+              pending: summary.filter((r) => r.clientStatus === "pending")
+                .length,
+              "action-required": summary.filter(
+                (r) => r.clientStatus === "action-required",
+              ).length,
+              "on-track": summary.filter((r) => r.clientStatus === "on-track")
+                .length,
+              fulfilled: summary.filter((r) => r.clientStatus === "fulfilled")
+                .length,
+            };
+            const total = summary.length;
 
-          return (
-            <>
-              <Row className="mb-3 g-2">
-                <Col xs={6} md={3}>
-                  <Card className="text-center border-warning">
-                    <Card.Body>
-                      <div className="fw-bold text-warning fs-4">
-                        {counts.pending}
-                      </div>
-                      <div className="text-muted small">Pending</div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-                <Col xs={6} md={3}>
-                  <Card className="text-center border-danger">
-                    <Card.Body>
-                      <div className="fw-bold text-danger fs-4">
-                        {counts["action-required"]}
-                      </div>
-                      <div className="text-muted small">Action Required</div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-                <Col xs={6} md={3}>
-                  <Card className="text-center border-primary">
-                    <Card.Body>
-                      <div className="fw-bold text-primary fs-4">
-                        {counts["on-track"]}
-                      </div>
-                      <div className="text-muted small">On Track</div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-                <Col xs={6} md={3}>
-                  <Card className="text-center border-success">
-                    <Card.Body>
-                      <div className="fw-bold text-success fs-4">
-                        {counts.fulfilled}
-                      </div>
-                      <div className="text-muted small">Fulfilled</div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </Row>
-              <ProgressBar className="mb-3" style={{ height: "24px" }}>
-                <ProgressBar
-                  variant="warning"
-                  now={(counts.pending / total) * 100}
-                  key={1}
-                />
-                <ProgressBar
-                  variant="danger"
-                  now={(counts["action-required"] / total) * 100}
-                  key={2}
-                />
-                <ProgressBar
-                  variant="primary"
-                  now={(counts["on-track"] / total) * 100}
-                  key={3}
-                />
-                <ProgressBar
-                  variant="success"
-                  now={(counts.fulfilled / total) * 100}
-                  key={4}
-                />
-              </ProgressBar>
-            </>
-          );
-        })()}
-      <Row className="mb-3 g-2">
+            return (
+              <>
+                <Row className="mb-3 g-2">
+                  <Col xs={6} md={3}>
+                    <Card className="text-center border-warning">
+                      <Card.Body>
+                        <div className="fw-bold text-warning fs-4">
+                          {counts.pending}
+                        </div>
+                        <div className="text-muted small">Pending</div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  <Col xs={6} md={3}>
+                    <Card className="text-center border-danger">
+                      <Card.Body>
+                        <div className="fw-bold text-danger fs-4">
+                          {counts["action-required"]}
+                        </div>
+                        <div className="text-muted small">Action Required</div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  <Col xs={6} md={3}>
+                    <Card className="text-center border-info">
+                      <Card.Body>
+                        <div className="fw-bold text-info fs-4">
+                          {counts["on-track"]}
+                        </div>
+                        <div className="text-muted small">On Track</div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  <Col xs={6} md={3}>
+                    <Card className="text-center border-success">
+                      <Card.Body>
+                        <div className="fw-bold text-success fs-4">
+                          {counts.fulfilled}
+                        </div>
+                        <div className="text-muted small">Fulfilled</div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+                <ProgressBar className="mb-3" style={{ height: "24px" }}>
+                  <ProgressBar
+                    variant="warning"
+                    now={(counts.pending / total) * 100}
+                    key={1}
+                  />
+                  <ProgressBar
+                    variant="danger"
+                    now={(counts["action-required"] / total) * 100}
+                    key={2}
+                  />
+                  <ProgressBar
+                    variant="info"
+                    now={(counts["on-track"] / total) * 100}
+                    key={3}
+                  />
+                  <ProgressBar
+                    variant="success"
+                    now={(counts.fulfilled / total) * 100}
+                    key={4}
+                  />
+                </ProgressBar>
+              </>
+            );
+          })()}
+      </div>
+      <Row className="mb-4 g-2">
         <Col md={3}>
           <Form.Select
             value={year}
