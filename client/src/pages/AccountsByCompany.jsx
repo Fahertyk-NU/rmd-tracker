@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { Container, Table, Form, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
-// eslint-disable-next-line no-unused-vars
-import PropTypes from "prop-types";
 
 function AccountsByCompany() {
   const [accounts, setAccounts] = useState([]);
@@ -58,7 +56,7 @@ function AccountsByCompany() {
 
   return (
     <Container className="mt-4">
-      <h2>Accounts by Company</h2>
+      <h1>Accounts by Company</h1>
       <Row className="mb-3 g-2">
         <Col xs={6} md={3}>
           <Form.Select

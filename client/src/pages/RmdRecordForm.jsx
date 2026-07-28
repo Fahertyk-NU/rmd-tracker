@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-// eslint-disable-next-line no-unused-vars
-import PropTypes from "prop-types";
 
 function RmdRecordForm() {
   const { id } = useParams();
@@ -78,7 +76,7 @@ function RmdRecordForm() {
 
   return (
     <Container className="mt-4" style={{ maxWidth: "600px" }}>
-      <h2>{isEdit ? "Edit RMD Record" : "Add RMD Record"}</h2>
+      <h1>{isEdit ? "Edit RMD Record" : "Add RMD Record"}</h1>
       {error && <Alert variant="danger">{error}</Alert>}
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">

@@ -74,7 +74,7 @@ function ClientForm() {
 
   return (
     <Container className="mt-4" style={{ maxWidth: "600px" }}>
-      <h2>{isEdit ? "Edit Client" : "Add Client"}</h2>
+      <h1>{isEdit ? "Edit Client" : "Add Client"}</h1>
       {error && <Alert variant="danger">{error}</Alert>}
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">

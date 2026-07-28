@@ -69,9 +69,9 @@ function ClientDetail() {
           </button>
           <Card className="mb-4">
             <Card.Header>
-              <strong>
+              <h1 className="h4 mb-0">
                 {client.firstName} {client.lastName}
-              </strong>{" "}
+              </h1>
               <Badge
                 bg={
                   client.status === "active"

@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { Container, Table, Row, Col, Card } from "react-bootstrap";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
-// eslint-disable-next-line no-unused-vars
-import PropTypes from "prop-types";
-import "./AccountDetail.css";
 
 function AccountDetail() {
   const { id } = useParams();
@@ -127,14 +124,14 @@ function AccountDetail() {
           </Card.Body>
         </Card>
       )}
-      <h2>
+      <h1>
         {account.company} — {account.accountType}
-      </h2>
+      </h1>
       <Row className="mt-3 mb-4 g-3">
         <Col md={6}>
           <Card className="h-100">
             <Card.Header>
-              <strong>Account Information</strong>
+              <h2 className="h6 mb-0 fw-bold">Account Information</h2>
             </Card.Header>
             <Card.Body>
               <p className="mb-2">
@@ -168,7 +165,7 @@ function AccountDetail() {
         <Col md={6}>
           <Card className="h-100">
             <Card.Header>
-              <strong>Distribution Settings</strong>
+              <h2 className="h6 mb-0 fw-bold">Distribution Settings</h2>
             </Card.Header>
             <Card.Body>
               <p className="mb-2">
@@ -237,7 +234,11 @@ function AccountDetail() {
               </p>
               {showVerifyInput && (
                 <div className="d-flex gap-2 mb-2">
+                  <label htmlFor="verify-name" className="visually-hidden">
+                    Your name
+                  </label>
                   <input
+                    id="verify-name"
                     className="form-control form-control-sm w-auto"
                     placeholder="Your name"
                     value={verifyName}
@@ -264,7 +265,7 @@ function AccountDetail() {
           <Col md={12}>
             <Card>
               <Card.Header>
-                <strong>Inherited IRA Details</strong>
+                <h2 className="h6 mb-0 fw-bold">Inherited IRA Details</h2>
               </Card.Header>
               <Card.Body>
                 <Row>
@@ -308,7 +309,7 @@ function AccountDetail() {
           </Col>
         )}
       </Row>
-      <h4 className="mt-4">RMD Records</h4>
+      <h2 className="mt-4">RMD Records</h2>
       <Table striped bordered hover responsive>
         <thead>
           <tr>
@@ -333,6 +334,11 @@ function AccountDetail() {
                   }
                 >
                   ${record.rmdAmount.toLocaleString()}
+                  <span className="visually-hidden">
+                    {record.rmdAmountEnteredBy
+                      ? ` — Entered by ${record.rmdAmountEnteredBy} on ${new Date(record.rmdAmountEnteredAt).toLocaleDateString()}`
+                      : " — Not yet entered"}
+                  </span>
                 </span>
               </td>
               <td>${record.amountTakenOrProjected.toLocaleString()}</td>

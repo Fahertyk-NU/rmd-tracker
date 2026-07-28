@@ -13,8 +13,6 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
-// eslint-disable-next-line no-unused-vars
-import PropTypes from "prop-types";
 import "./Dashboard.css";
 
 function Dashboard() {
@@ -57,7 +55,7 @@ function Dashboard() {
   return (
     <Container className="mt-4 mb-5">
       <div className="mb-2">
-        <h2 className="page-title">Required Minimum Distribution Dashboard</h2>
+        <h1 className="page-title">Required Minimum Distribution Dashboard</h1>
         <p className="page-subtitle text-muted">
           Tracking {year} distributions across {summary.length} clients
         </p>
@@ -198,7 +196,11 @@ function Dashboard() {
       </div>
       <Row className="mb-4 g-2">
         <Col md={3}>
+          <Form.Label htmlFor="year-select" className="visually-hidden">
+            Filter by year
+          </Form.Label>
           <Form.Select
+            id="year-select"
             value={year}
             onChange={(e) => {
               setLoading(true);
@@ -212,14 +214,22 @@ function Dashboard() {
           </Form.Select>
         </Col>
         <Col md={3}>
+          <Form.Label htmlFor="client-search" className="visually-hidden">
+            Search by client name
+          </Form.Label>
           <Form.Control
+            id="client-search"
             placeholder="Search by client name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </Col>
         <Col md={3}>
+          <Form.Label htmlFor="advisor-select" className="visually-hidden">
+            Filter by advisor
+          </Form.Label>
           <Form.Select
+            id="advisor-select"
             value={filterAdvisor}
             onChange={(e) => setFilterAdvisor(e.target.value)}
           >
@@ -232,7 +242,11 @@ function Dashboard() {
           </Form.Select>
         </Col>
         <Col md={3}>
+          <Form.Label htmlFor="status-filter" className="visually-hidden">
+            Filter by status
+          </Form.Label>
           <Form.Select
+            id="status-filter"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
