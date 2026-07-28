@@ -65,7 +65,6 @@ function AccountDetail() {
       .then(([accountData, recordsData]) => {
         setAccount(accountData);
         setRmdRecords(recordsData);
-        // fetch client name once we have the account
         return fetch(`/api/clients/${accountData.clientId}`).then((res) =>
           res.json(),
         );
@@ -135,23 +134,15 @@ function AccountDetail() {
             </Card.Header>
             <Card.Body>
               <p className="mb-2">
-                <strong>Primary Account #:</strong>{" "}
-                {account.primaryAccountNumber}
+                Primary Account #: {account.primaryAccountNumber}
               </p>
               {account.secondaryAccountNumber && (
                 <p className="mb-2">
-                  <strong>Secondary Account #:</strong>{" "}
-                  {account.secondaryAccountNumber}
+                  Secondary Account #: {account.secondaryAccountNumber}
                 </p>
               )}
-              <p className="mb-2">
-                <strong>Status:</strong> {account.status}
-              </p>
-              {account.notes && (
-                <p className="mb-2">
-                  <strong>Notes:</strong> {account.notes}
-                </p>
-              )}
+              <p className="mb-2">Status: {account.status}</p>
+              {account.notes && <p className="mb-2">Notes: {account.notes}</p>}
               {account.lastUpdatedBy && (
                 <p className="mb-0 text-muted small">
                   Last updated{" "}
@@ -169,33 +160,32 @@ function AccountDetail() {
             </Card.Header>
             <Card.Body>
               <p className="mb-2">
-                <strong>Auto Distribution:</strong> {account.autoDistribution}
+                Auto Distribution: {account.autoDistribution}
               </p>
               {account.autoDistribution === "full-recalculated" &&
                 account.fullRecalcDate && (
                   <p className="mb-2">
-                    <strong>Expected Distribution Date:</strong>{" "}
+                    Expected Distribution Date:{" "}
                     {new Date(account.fullRecalcDate).toLocaleDateString()}
                   </p>
                 )}
               {account.autoDistribution === "fixed" && (
                 <>
                   <p className="mb-2">
-                    <strong>Fixed Amount:</strong> $
-                    {account.fixedAmount?.toLocaleString()} /{" "}
+                    Fixed Amount: ${account.fixedAmount?.toLocaleString()} /{" "}
                     {account.fixedSchedule}
                   </p>
                   {account.fixedSchedule === "monthly" &&
                     account.distributionDay && (
                       <p className="mb-2">
-                        <strong>Distribution Day:</strong>{" "}
-                        {account.distributionDay} of each month
+                        Distribution Day: {account.distributionDay} of each
+                        month
                       </p>
                     )}
                   {account.fixedSchedule === "annual" &&
                     account.distributionDay && (
                       <p className="mb-2">
-                        <strong>Distribution Date:</strong>{" "}
+                        Distribution Date:{" "}
                         {new Date(
                           2000,
                           account.distributionMonth - 1,
@@ -209,17 +199,15 @@ function AccountDetail() {
               {account.autoDistribution !== "none" && (
                 <>
                   <p className="mb-2">
-                    <strong>Federal Withholding:</strong>{" "}
-                    {account.federalWithholding}%
+                    Federal Withholding: {account.federalWithholding}%
                   </p>
                   <p className="mb-2">
-                    <strong>State Withholding:</strong>{" "}
-                    {account.stateWithholding}%
+                    State Withholding: {account.stateWithholding}%
                   </p>
                 </>
               )}
               <p className="mb-2">
-                <strong>Auto Distribution Last Verified:</strong>{" "}
+                Auto Distribution Last Verified:{" "}
                 {account.autoDistVerifiedAt
                   ? `${new Date(account.autoDistVerifiedAt).toLocaleDateString()} by ${account.autoDistVerifiedBy}`
                   : "Not yet verified"}{" "}
@@ -271,11 +259,10 @@ function AccountDetail() {
                 <Row>
                   <Col md={6}>
                     <p className="mb-2">
-                      <strong>Original Owner:</strong>{" "}
-                      {account.originalOwnerName}
+                      Original Owner: {account.originalOwnerName}
                     </p>
                     <p className="mb-2">
-                      <strong>Original Owner DOB:</strong>{" "}
+                      Original Owner DOB:{" "}
                       {account.originalOwnerDOB
                         ? new Date(
                             account.originalOwnerDOB,
@@ -283,7 +270,7 @@ function AccountDetail() {
                         : "—"}
                     </p>
                     <p className="mb-2">
-                      <strong>Date of Death:</strong>{" "}
+                      Date of Death:{" "}
                       {account.dateOfDeath
                         ? new Date(account.dateOfDeath).toLocaleDateString()
                         : "—"}
@@ -291,15 +278,14 @@ function AccountDetail() {
                   </Col>
                   <Col md={6}>
                     <p className="mb-2">
-                      <strong>Beneficiary Relationship:</strong>{" "}
+                      Beneficiary Relationship:{" "}
                       {account.beneficiaryRelationship}
                     </p>
                     <p className="mb-2">
-                      <strong>Pre-SECURE Act:</strong>{" "}
-                      {account.preSecureAct ? "Yes" : "No"}
+                      Pre-SECURE Act: {account.preSecureAct ? "Yes" : "No"}
                     </p>
                     <p className="mb-2">
-                      <strong>Original Owner Had Started RMDs:</strong>{" "}
+                      Original Owner Had Started RMDs:{" "}
                       {account.originalOwnerRMDStarted ? "Yes" : "No"}
                     </p>
                   </Col>
