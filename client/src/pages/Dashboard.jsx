@@ -168,7 +168,11 @@ function Dashboard() {
                     </Card>
                   </Col>
                 </Row>
-                <ProgressBar className="mb-3" style={{ height: "24px" }}>
+                <ProgressBar
+                  className="mb-3"
+                  style={{ height: "24px" }}
+                  aria-label={`RMD completion: ${counts.fulfilled} fulfilled, ${counts["on-track"]} on track, ${counts["action-required"]} action required, ${counts.pending} pending, out of ${total} total`}
+                >
                   <ProgressBar
                     variant="warning"
                     now={(counts.pending / total) * 100}

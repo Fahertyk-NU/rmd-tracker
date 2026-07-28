@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import "./AccountForm.css";
 
 function AccountForm() {
   const { id } = useParams();
@@ -103,150 +104,118 @@ function AccountForm() {
       <h1>{isEdit ? "Edit Account" : "Add Account"}</h1>
       {error && <Alert variant="danger">{error}</Alert>}
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Company</Form.Label>
-          <Form.Control
-            name="company"
-            value={formData.company}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Account Type</Form.Label>
-          <Form.Select
-            name="accountType"
-            value={formData.accountType}
-            onChange={handleChange}
-          >
-            <option>Traditional IRA</option>
-            <option>Roth IRA</option>
-            <option>Inherited IRA</option>
-            <option>403b</option>
-            <option>401k</option>
-            <option>SEP IRA</option>
-          </Form.Select>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Primary Account Number</Form.Label>
-          <Form.Control
-            name="primaryAccountNumber"
-            value={formData.primaryAccountNumber}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Secondary Account Number (if applicable)</Form.Label>
-          <Form.Control
-            name="secondaryAccountNumber"
-            value={formData.secondaryAccountNumber}
-            onChange={handleChange}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Status</Form.Label>
-          <Form.Select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-          >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="inherited">Inherited</option>
-          </Form.Select>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Auto Distribution</Form.Label>
-          <Form.Select
-            name="autoDistribution"
-            value={formData.autoDistribution}
-            onChange={handleChange}
-          >
-            <option value="none">None</option>
-            <option value="full-recalculated">
-              Full RMD Recalculated Annually
-            </option>
-            <option value="fixed">Fixed Amount</option>
-          </Form.Select>
-        </Form.Group>
-        {formData.autoDistribution === "full-recalculated" && (
+        <div className="mb-5">
+          <p className="form-section-label">Account Details</p>
           <Form.Group className="mb-3">
-            <Form.Label>Expected Distribution Date</Form.Label>
+            <Form.Label>Company</Form.Label>
             <Form.Control
-              type="date"
-              name="fullRecalcDate"
-              value={formData.fullRecalcDate}
+              name="company"
+              value={formData.company}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Account Type</Form.Label>
+            <Form.Select
+              name="accountType"
+              value={formData.accountType}
+              onChange={handleChange}
+            >
+              <option>Traditional IRA</option>
+              <option>Roth IRA</option>
+              <option>Inherited IRA</option>
+              <option>403b</option>
+              <option>401k</option>
+              <option>SEP IRA</option>
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Primary Account Number</Form.Label>
+            <Form.Control
+              name="primaryAccountNumber"
+              value={formData.primaryAccountNumber}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Secondary Account Number (if applicable)</Form.Label>
+            <Form.Control
+              name="secondaryAccountNumber"
+              value={formData.secondaryAccountNumber}
               onChange={handleChange}
             />
           </Form.Group>
-        )}
-        {formData.autoDistribution === "fixed" && (
-          <>
+
+          <Form.Group className="mb-0">
+            <Form.Label>Status</Form.Label>
+            <Form.Select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+            >
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="inherited">Inherited</option>
+            </Form.Select>
+          </Form.Group>
+        </div>
+
+        <div className="mb-5">
+          <p className="form-section-label">Auto Distribution</p>
+          <Form.Group className="mb-3">
+            <Form.Label>Auto Distribution</Form.Label>
+            <Form.Select
+              name="autoDistribution"
+              value={formData.autoDistribution}
+              onChange={handleChange}
+            >
+              <option value="none">None</option>
+              <option value="full-recalculated">
+                Full RMD Recalculated Annually
+              </option>
+              <option value="fixed">Fixed Amount</option>
+            </Form.Select>
+          </Form.Group>
+          {formData.autoDistribution === "full-recalculated" && (
             <Form.Group className="mb-3">
-              <Form.Label>Fixed Amount ($)</Form.Label>
+              <Form.Label>Expected Distribution Date</Form.Label>
               <Form.Control
-                type="number"
-                name="fixedAmount"
-                value={formData.fixedAmount}
+                type="date"
+                name="fullRecalcDate"
+                value={formData.fullRecalcDate}
                 onChange={handleChange}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Schedule</Form.Label>
-              <Form.Select
-                name="fixedSchedule"
-                value={formData.fixedSchedule}
-                onChange={handleChange}
-              >
-                <option value="">Select...</option>
-                <option value="monthly">Monthly</option>
-                <option value="annual">Annual</option>
-              </Form.Select>
-            </Form.Group>
-            {formData.fixedSchedule === "monthly" && (
+          )}
+          {formData.autoDistribution === "fixed" && (
+            <>
               <Form.Group className="mb-3">
-                <Form.Label>Day of Month</Form.Label>
+                <Form.Label>Fixed Amount ($)</Form.Label>
                 <Form.Control
                   type="number"
-                  name="distributionDay"
-                  value={formData.distributionDay}
+                  name="fixedAmount"
+                  value={formData.fixedAmount}
                   onChange={handleChange}
-                  min={1}
-                  max={31}
-                  placeholder="e.g. 15"
                 />
               </Form.Group>
-            )}
-            {formData.fixedSchedule === "annual" && (
-              <>
-                <Form.Group className="mb-3">
-                  <Form.Label>Month</Form.Label>
-                  <Form.Select
-                    name="distributionMonth"
-                    value={formData.distributionMonth}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select...</option>
-                    <option value={1}>January</option>
-                    <option value={2}>February</option>
-                    <option value={3}>March</option>
-                    <option value={4}>April</option>
-                    <option value={5}>May</option>
-                    <option value={6}>June</option>
-                    <option value={7}>July</option>
-                    <option value={8}>August</option>
-                    <option value={9}>September</option>
-                    <option value={10}>October</option>
-                    <option value={11}>November</option>
-                    <option value={12}>December</option>
-                  </Form.Select>
-                </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Schedule</Form.Label>
+                <Form.Select
+                  name="fixedSchedule"
+                  value={formData.fixedSchedule}
+                  onChange={handleChange}
+                >
+                  <option value="">Select...</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="annual">Annual</option>
+                </Form.Select>
+              </Form.Group>
+              {formData.fixedSchedule === "monthly" && (
                 <Form.Group className="mb-3">
                   <Form.Label>Day of Month</Form.Label>
                   <Form.Control
@@ -259,38 +228,76 @@ function AccountForm() {
                     placeholder="e.g. 15"
                   />
                 </Form.Group>
-              </>
-            )}
-          </>
-        )}
+              )}
+              {formData.fixedSchedule === "annual" && (
+                <>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Month</Form.Label>
+                    <Form.Select
+                      name="distributionMonth"
+                      value={formData.distributionMonth}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select...</option>
+                      <option value={1}>January</option>
+                      <option value={2}>February</option>
+                      <option value={3}>March</option>
+                      <option value={4}>April</option>
+                      <option value={5}>May</option>
+                      <option value={6}>June</option>
+                      <option value={7}>July</option>
+                      <option value={8}>August</option>
+                      <option value={9}>September</option>
+                      <option value={10}>October</option>
+                      <option value={11}>November</option>
+                      <option value={12}>December</option>
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Day of Month</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="distributionDay"
+                      value={formData.distributionDay}
+                      onChange={handleChange}
+                      min={1}
+                      max={31}
+                      placeholder="e.g. 15"
+                    />
+                  </Form.Group>
+                </>
+              )}
+            </>
+          )}
 
-        {formData.autoDistribution !== "none" && (
-          <>
-            <Form.Group className="mb-3">
-              <Form.Label>Federal Withholding (%)</Form.Label>
-              <Form.Control
-                type="number"
-                name="federalWithholding"
-                value={formData.federalWithholding}
-                onChange={handleChange}
-              />
-            </Form.Group>
+          {formData.autoDistribution !== "none" && (
+            <>
+              <Form.Group className="mb-3">
+                <Form.Label>Federal Withholding (%)</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="federalWithholding"
+                  value={formData.federalWithholding}
+                  onChange={handleChange}
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>State Withholding (%)</Form.Label>
-              <Form.Control
-                type="number"
-                name="stateWithholding"
-                value={formData.stateWithholding}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </>
-        )}
+              <Form.Group className="mb-0">
+                <Form.Label>State Withholding (%)</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="stateWithholding"
+                  value={formData.stateWithholding}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </>
+          )}
+        </div>
 
         {formData.accountType === "Inherited IRA" && (
-          <>
-            <h2 className="mt-3">Inherited IRA Details</h2>
+          <div className="mb-5">
+            <h2 className="form-section-label mt-3">Inherited IRA Details</h2>
             <Form.Group className="mb-3">
               <Form.Label>Original Owner Name</Form.Label>
               <Form.Control
@@ -338,7 +345,7 @@ function AccountForm() {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-0">
               <Form.Check
                 type="checkbox"
                 label="Original owner had already started taking RMDs"
@@ -347,19 +354,21 @@ function AccountForm() {
                 onChange={handleChange}
               />
             </Form.Group>
-          </>
+          </div>
         )}
 
-        <Form.Group className="mb-3">
-          <Form.Label>Notes</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-          />
-        </Form.Group>
+        <div className="mb-4">
+          <Form.Group className="mb-0">
+            <Form.Label>Notes</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </div>
 
         <Button type="submit" variant="primary" className="me-2">
           {isEdit ? "Save Changes" : "Add Account"}

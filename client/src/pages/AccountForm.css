@@ -1,0 +1,8 @@
+.form-section-label {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-brand-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: var(--space-xs);
+}
