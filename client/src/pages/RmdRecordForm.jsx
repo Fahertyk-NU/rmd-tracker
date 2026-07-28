@@ -79,58 +79,62 @@ function RmdRecordForm() {
       <h1>{isEdit ? "Edit RMD Record" : "Add RMD Record"}</h1>
       {error && <Alert variant="danger">{error}</Alert>}
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Year</Form.Label>
-          <Form.Control
-            type="number"
-            name="year"
-            value={formData.year}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
+        <div className="mb-4">
+          <Form.Group className="mb-3">
+            <Form.Label>Year</Form.Label>
+            <Form.Control
+              type="number"
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>RMD Amount ($)</Form.Label>
-          <Form.Control
-            type="number"
-            name="rmdAmount"
-            value={formData.rmdAmount}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>RMD Amount ($)</Form.Label>
+            <Form.Control
+              type="number"
+              name="rmdAmount"
+              value={formData.rmdAmount}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Amount Taken / Projected ($)</Form.Label>
-          <Form.Control
-            type="number"
-            name="amountTakenOrProjected"
-            value={formData.amountTakenOrProjected}
-            onChange={handleChange}
-          />
-        </Form.Group>
+          <Form.Group className="mb-0">
+            <Form.Label>Amount Taken / Projected ($)</Form.Label>
+            <Form.Control
+              type="number"
+              name="amountTakenOrProjected"
+              value={formData.amountTakenOrProjected}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </div>
 
-        <Form.Group className="mb-3">
-          <Form.Label>RMD Amount Entered By</Form.Label>
-          <Form.Control
-            name="rmdAmountEnteredBy"
-            value={formData.rmdAmountEnteredBy}
-            onChange={handleChange}
-            placeholder="Your name"
-          />
-        </Form.Group>
+        <div className="mb-4">
+          <Form.Group className="mb-3">
+            <Form.Label>RMD Amount Entered By</Form.Label>
+            <Form.Control
+              name="rmdAmountEnteredBy"
+              value={formData.rmdAmountEnteredBy}
+              onChange={handleChange}
+              placeholder="Your name"
+            />
+          </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Notes</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-          />
-        </Form.Group>
+          <Form.Group className="mb-0">
+            <Form.Label>Notes</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </div>
 
         <Button type="submit" variant="primary" className="me-2">
           {isEdit ? "Save Changes" : "Add RMD Record"}
