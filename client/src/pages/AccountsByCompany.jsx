@@ -56,10 +56,14 @@ function AccountsByCompany() {
 
   return (
     <Container className="mt-4">
-      <h1>Accounts by Company</h1>
-      <Row className="mb-3 g-2">
+      <h1 className="page-title mb-4">Accounts by Company</h1>
+      <Row className="mb-4 g-2">
         <Col xs={6} md={3}>
+          <Form.Label htmlFor="year-filter" className="visually-hidden">
+            Filter by year
+          </Form.Label>
           <Form.Select
+            id="year-filter"
             value={year}
             onChange={(e) => {
               setLoading(true);
@@ -73,7 +77,11 @@ function AccountsByCompany() {
           </Form.Select>
         </Col>
         <Col xs={6} md={3}>
+          <Form.Label htmlFor="company-filter" className="visually-hidden">
+            Filter by company
+          </Form.Label>
           <Form.Select
+            id="company-filter"
             value={filterCompany}
             onChange={(e) => setFilterCompany(e.target.value)}
           >
@@ -86,7 +94,11 @@ function AccountsByCompany() {
           </Form.Select>
         </Col>
         <Col xs={6} md={3}>
+          <Form.Label htmlFor="status-filter-abc" className="visually-hidden">
+            Filter by status
+          </Form.Label>
           <Form.Select
+            id="status-filter-abc"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
@@ -98,7 +110,11 @@ function AccountsByCompany() {
           </Form.Select>
         </Col>
         <Col xs={6} md={3}>
+          <Form.Label htmlFor="sort-by" className="visually-hidden">
+            Sort by
+          </Form.Label>
           <Form.Select
+            id="sort-by"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
