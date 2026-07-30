@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import usePageTitle from "../hooks/usePageTitle";
 
 function RmdRecordForm() {
   const { id } = useParams();
@@ -9,6 +10,8 @@ function RmdRecordForm() {
   const accountId = searchParams.get("accountId");
   const clientId = searchParams.get("clientId");
   const isEdit = Boolean(id);
+
+  usePageTitle(isEdit ? "Edit RMD Record" : "Add RMD Record");
 
   const [formData, setFormData] = useState({
     year: new Date().getFullYear(),

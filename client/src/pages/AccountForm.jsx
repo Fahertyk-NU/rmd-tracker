@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import "./AccountForm.css";
+import usePageTitle from "../hooks/usePageTitle";
 
 function AccountForm() {
   const { id } = useParams();
@@ -9,6 +10,8 @@ function AccountForm() {
   const [searchParams] = useSearchParams();
   const clientId = searchParams.get("clientId");
   const isEdit = Boolean(id);
+
+  usePageTitle(isEdit ? "Edit Account" : "Add Account");
 
   const [formData, setFormData] = useState({
     company: "",

@@ -14,6 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
 import "./Dashboard.css";
+import usePageTitle from "../hooks/usePageTitle";
 
 function Dashboard() {
   const [summary, setSummary] = useState([]);
@@ -23,6 +24,8 @@ function Dashboard() {
   const [filterAdvisor, setFilterAdvisor] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [showHelp, setShowHelp] = useState(false);
+
+  usePageTitle("Dashboard");
 
   useEffect(() => {
     fetch(`/api/dashboard?year=${year}`)
@@ -36,6 +39,14 @@ function Dashboard() {
         setLoading(false);
       });
   }, [year]);
+
+  const currentYear = new Date().getFullYear();
+  const yearOptions = [
+    currentYear - 2,
+    currentYear - 1,
+    currentYear,
+    currentYear + 1,
+  ];
 
   // get unique advisor names for the filter dropdown
   const advisors = [...new Set(summary.map((row) => row.client.advisorName))];
@@ -216,10 +227,11 @@ function Dashboard() {
               setYear(parseInt(e.target.value));
             }}
           >
-            <option value={2024}>2024</option>
-            <option value={2025}>2025</option>
-            <option value={2026}>2026</option>
-            <option value={2027}>2027</option>
+            {yearOptions.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
           </Form.Select>
         </Col>
         <Col md={3}>

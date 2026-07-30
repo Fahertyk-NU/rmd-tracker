@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Container, Table, Row, Col, Card } from "react-bootstrap";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
+import usePageTitle from "../hooks/usePageTitle";
 
 function AccountDetail() {
   const { id } = useParams();
@@ -12,6 +13,10 @@ function AccountDetail() {
   const [verifyName, setVerifyName] = useState("");
   const [showVerifyInput, setShowVerifyInput] = useState(false);
   const [client, setClient] = useState(null);
+
+  usePageTitle(
+    account ? `${account.company} — ${account.accountType}` : "Account",
+  );
 
   const handleDeleteAccount = () => {
     if (
