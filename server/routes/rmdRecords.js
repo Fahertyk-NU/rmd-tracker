@@ -131,11 +131,11 @@ router.post("/", async (req, res) => {
       accountId: new ObjectId(req.body.accountId),
       clientId: new ObjectId(req.body.clientId),
       year: parseInt(req.body.year),
-      rmdAmount: parseFloat(req.body.rmdAmount),
+      rmdAmount: parseFloat(req.body.rmdAmount) || 0,
       amountTakenOrProjected: parseFloat(req.body.amountTakenOrProjected) || 0,
       distributionStatus: computeRmdStatus({
         ...req.body,
-        rmdAmount: parseFloat(req.body.rmdAmount),
+        rmdAmount: parseFloat(req.body.rmdAmount) || 0,
         amountTakenOrProjected:
           parseFloat(req.body.amountTakenOrProjected) || 0,
       }),
@@ -158,7 +158,7 @@ router.put("/:id", async (req, res) => {
     const { _id, ...rest } = req.body;
     const updated = { ...rest, lastUpdatedAt: new Date() };
     updated.year = parseInt(updated.year);
-    updated.rmdAmount = parseFloat(updated.rmdAmount);
+    updated.rmdAmount = parseFloat(updated.rmdAmount) || 0;
     updated.amountTakenOrProjected =
       parseFloat(updated.amountTakenOrProjected) || 0;
     updated.distributionStatus = computeRmdStatus(updated);
