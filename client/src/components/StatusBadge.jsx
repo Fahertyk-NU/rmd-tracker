@@ -10,9 +10,11 @@ function StatusBadge({ status }) {
     pending: "warning",
   };
 
+  const displayText = status.replace(/-/g, " ");
+
   return (
     <Badge bg={variantMap[status] || "secondary"} className="status-badge">
-      {status}
+      {displayText}
     </Badge>
   );
 }
