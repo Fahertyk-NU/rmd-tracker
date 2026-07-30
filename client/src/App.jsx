@@ -23,7 +23,9 @@ function ProtectedLayout({ user, onLogout }) {
   return (
     <>
       <AppNavbar onLogout={onLogout} />
+      <main>
       <Outlet />
+      </main>
     </>
   );
 }

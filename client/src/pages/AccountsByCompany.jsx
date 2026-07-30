@@ -175,6 +175,7 @@ function AccountsByCompany() {
                   <Link
                     to={`/accounts/${account._id}`}
                     className="btn btn-sm btn-primary"
+                    aria-label={`View account ${account.primaryAccountNumber} for ${account.client.firstName} ${account.client.lastName}`}
                   >
                     View
                   </Link>

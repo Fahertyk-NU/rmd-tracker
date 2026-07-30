@@ -170,6 +170,7 @@ function Dashboard() {
                 </Row>
                 <ProgressBar
                   className="mb-3"
+                  role="img"
                   style={{ height: "24px" }}
                   aria-label={`RMD completion: ${counts.fulfilled} fulfilled, ${counts["on-track"]} on track, ${counts["action-required"]} action required, ${counts.pending} pending, out of ${total} total`}
                 >
@@ -177,21 +178,25 @@ function Dashboard() {
                     variant="warning"
                     now={(counts.pending / total) * 100}
                     key={1}
+                    aria-label={`${counts.pending} pending`}
                   />
                   <ProgressBar
                     variant="danger"
                     now={(counts["action-required"] / total) * 100}
                     key={2}
+                    aria-label={`${counts["action-required"]} action required`}
                   />
                   <ProgressBar
                     variant="info"
                     now={(counts["on-track"] / total) * 100}
                     key={3}
+                    aria-label={`${counts["on-track"]} on track`}
                   />
                   <ProgressBar
                     variant="success"
                     now={(counts.fulfilled / total) * 100}
                     key={4}
+                    aria-label={`${counts.fulfilled} fulfilled`}
                   />
                 </ProgressBar>
               </>

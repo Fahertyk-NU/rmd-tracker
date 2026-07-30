@@ -336,12 +336,14 @@ function AccountDetail() {
                   <Link
                     to={`/rmdRecords/${record._id}/edit`}
                     className="btn btn-sm btn-outline-secondary"
+                    aria-label={`Edit RMD record for ${record.year}`}
                   >
                     Edit
                   </Link>
                   <button
                     className="btn btn-sm btn-danger"
                     onClick={() => handleDeleteRmdRecord(record._id)}
+                    aria-label={`Delete RMD record for ${record.year}`}
                   >
                     Delete
                   </button>
