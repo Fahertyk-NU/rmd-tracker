@@ -44,4 +44,4 @@ function computeRmdStatus(record) {
   return "pending";
 }
 
-module.exports = { computeRmdStatus };
+export { computeRmdStatus };

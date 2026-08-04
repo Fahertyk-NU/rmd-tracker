@@ -1,11 +1,14 @@
-require("dotenv").config();
+import "dotenv/config";
+import { connectDB } from "./db/conn.js";
+import express from "express";
+import session from "express-session";
+import passport from "./passport.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import { requireAuth } from "./middleware/auth.js";
 
-const { connectDB } = require("./db/conn");
-const express = require("express");
-const session = require("express-session");
-const passport = require("./passport");
-const path = require("path");
-const { requireAuth } = require("./middleware/auth");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,12 +26,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// API routes
-const authRouter = require("./routes/auth");
-const accountsRouter = require("./routes/accounts");
-const rmdRecordsRouter = require("./routes/rmdRecords");
-const dashboardRouter = require("./routes/dashboard");
-const clientsRouter = require("./routes/clients");
+import authRouter from "./routes/auth.js";
+import accountsRouter from "./routes/accounts.js";
+import rmdRecordsRouter from "./routes/rmdRecords.js";
+import dashboardRouter from "./routes/dashboard.js";
+import clientsRouter from "./routes/clients.js";
 
 app.use("/api/auth", authRouter);
 app.use("/api/accounts", requireAuth, accountsRouter);
@@ -36,7 +38,6 @@ app.use("/api/rmdRecords", requireAuth, rmdRecordsRouter);
 app.use("/api/dashboard", requireAuth, dashboardRouter);
 app.use("/api/clients", requireAuth, clientsRouter);
 
-// Serve React frontend in production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/dist")));
   app.get("*splat", (req, res) => {

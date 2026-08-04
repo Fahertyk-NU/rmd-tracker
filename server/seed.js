@@ -1,6 +1,7 @@
-require("dotenv").config();
-const { MongoClient } = require("mongodb");
-const bcrypt = require("bcryptjs");
+import "dotenv/config";
+import { MongoClient } from "mongodb";
+import bcrypt from "bcryptjs";
+import { computeRmdStatus } from "./db/rmdStatus.js";
 
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
@@ -90,8 +91,6 @@ const accountTypes = [
 ];
 const autoDistOptions = ["none", "full-recalculated", "fixed"];
 const scheduleOptions = ["monthly", "annual"];
-
-const { computeRmdStatus } = require("./db/rmdStatus");
 
 async function seed() {
   try {

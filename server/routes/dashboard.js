@@ -1,6 +1,7 @@
-const express = require("express");
+import express from "express";
+import { getDB } from "../db/conn.js";
+
 const router = express.Router();
-const { getDB } = require("../db/conn");
 
 // GET /api/dashboard?year=2026
 router.get("/", async (req, res) => {
@@ -157,4 +158,4 @@ router.get("/", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

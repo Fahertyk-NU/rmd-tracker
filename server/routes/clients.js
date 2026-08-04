@@ -1,7 +1,8 @@
-const express = require("express");
+import express from "express";
+import { getDB } from "../db/conn.js";
+import { ObjectId } from "mongodb";
+
 const router = express.Router();
-const { getDB } = require("../db/conn");
-const { ObjectId } = require("mongodb");
 
 // GET /api/clients
 router.get("/", async (req, res) => {
@@ -92,4 +93,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

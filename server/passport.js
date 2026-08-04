@@ -1,8 +1,8 @@
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const bcrypt = require("bcryptjs");
-const { ObjectId } = require("mongodb");
-const { getDB } = require("./db/conn");
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import bcrypt from "bcryptjs";
+import { ObjectId } from "mongodb";
+import { getDB } from "./db/conn.js";
 
 passport.use(
   new LocalStrategy(
@@ -42,4 +42,4 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-module.exports = passport;
+export default passport;

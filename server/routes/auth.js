@@ -1,8 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const passport = require("passport");
+import express from "express";
+import passport from "passport";
 
-// POST /api/auth/login
+const router = express.Router();
+
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
@@ -18,7 +18,6 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-// POST /api/auth/logout
 router.post("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
@@ -26,7 +25,6 @@ router.post("/logout", (req, res, next) => {
   });
 });
 
-// GET /api/auth/me -- check current session
 router.get("/me", (req, res) => {
   if (req.isAuthenticated()) {
     res.json({ user: { email: req.user.email, name: req.user.name } });
@@ -35,4 +33,4 @@ router.get("/me", (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
