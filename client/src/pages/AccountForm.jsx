@@ -109,7 +109,7 @@ function AccountForm() {
       <Form onSubmit={handleSubmit}>
         <div className="mb-5">
           <p className="form-section-label">Account Details</p>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="company">
             <Form.Label>Company</Form.Label>
             <Form.Control
               name="company"
@@ -119,7 +119,7 @@ function AccountForm() {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="accountType">
             <Form.Label>Account Type</Form.Label>
             <Form.Select
               name="accountType"
@@ -135,7 +135,7 @@ function AccountForm() {
             </Form.Select>
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="primaryAccountNumber">
             <Form.Label>Primary Account Number</Form.Label>
             <Form.Control
               name="primaryAccountNumber"
@@ -145,7 +145,7 @@ function AccountForm() {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="secondaryAccountNumber">
             <Form.Label>Secondary Account Number (if applicable)</Form.Label>
             <Form.Control
               name="secondaryAccountNumber"
@@ -154,7 +154,7 @@ function AccountForm() {
             />
           </Form.Group>
 
-          <Form.Group className="mb-0">
+          <Form.Group className="mb-0" controlId="status">
             <Form.Label>Status</Form.Label>
             <Form.Select
               name="status"
@@ -170,7 +170,7 @@ function AccountForm() {
 
         <div className="mb-5">
           <p className="form-section-label">Auto Distribution</p>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="autoDistribution">
             <Form.Label>Auto Distribution</Form.Label>
             <Form.Select
               name="autoDistribution"
@@ -185,7 +185,7 @@ function AccountForm() {
             </Form.Select>
           </Form.Group>
           {formData.autoDistribution === "full-recalculated" && (
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="fullRecalcDate">
               <Form.Label>Expected Distribution Date</Form.Label>
               <Form.Control
                 type="date"
@@ -197,7 +197,7 @@ function AccountForm() {
           )}
           {formData.autoDistribution === "fixed" && (
             <>
-              <Form.Group className="mb-3">
+              <Form.Group className="mb-3" controlId="fixedAmount">
                 <Form.Label>Fixed Amount ($)</Form.Label>
                 <Form.Control
                   type="number"
@@ -206,7 +206,7 @@ function AccountForm() {
                   onChange={handleChange}
                 />
               </Form.Group>
-              <Form.Group className="mb-3">
+              <Form.Group className="mb-3" controlId="fixedSchedule">
                 <Form.Label>Schedule</Form.Label>
                 <Form.Select
                   name="fixedSchedule"
@@ -219,7 +219,7 @@ function AccountForm() {
                 </Form.Select>
               </Form.Group>
               {formData.fixedSchedule === "monthly" && (
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3" controlId="distributionDay">
                   <Form.Label>Day of Month</Form.Label>
                   <Form.Control
                     type="number"
@@ -234,7 +234,7 @@ function AccountForm() {
               )}
               {formData.fixedSchedule === "annual" && (
                 <>
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-3" controlId="distributionMonth">
                     <Form.Label>Month</Form.Label>
                     <Form.Select
                       name="distributionMonth"
@@ -256,7 +256,7 @@ function AccountForm() {
                       <option value={12}>December</option>
                     </Form.Select>
                   </Form.Group>
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-3" controlId="distributionDay">
                     <Form.Label>Day of Month</Form.Label>
                     <Form.Control
                       type="number"
@@ -275,7 +275,7 @@ function AccountForm() {
 
           {formData.autoDistribution !== "none" && (
             <>
-              <Form.Group className="mb-3">
+              <Form.Group className="mb-3" controlId="federalWithholding">
                 <Form.Label>Federal Withholding (%)</Form.Label>
                 <Form.Control
                   type="number"
@@ -301,7 +301,7 @@ function AccountForm() {
         {formData.accountType === "Inherited IRA" && (
           <div className="mb-5">
             <h2 className="form-section-label mt-3">Inherited IRA Details</h2>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="originalOwnerName">
               <Form.Label>Original Owner Name</Form.Label>
               <Form.Control
                 name="originalOwnerName"
@@ -309,7 +309,7 @@ function AccountForm() {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="originalOwnerDOB">
               <Form.Label>Original Owner Date of Birth</Form.Label>
               <Form.Control
                 type="date"
@@ -318,7 +318,7 @@ function AccountForm() {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="dateOfDeath">
               <Form.Label>Date of Death</Form.Label>
               <Form.Control
                 type="date"
@@ -327,7 +327,7 @@ function AccountForm() {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="beneficiaryRelationship">
               <Form.Label>Beneficiary Relationship</Form.Label>
               <Form.Select
                 name="beneficiaryRelationship"
@@ -339,7 +339,7 @@ function AccountForm() {
                 <option value="non-spouse">Non-Spouse</option>
               </Form.Select>
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="preSecureAct">
               <Form.Check
                 type="checkbox"
                 label="Death occurred before Jan 1, 2020 (Pre-SECURE Act)"
@@ -348,7 +348,7 @@ function AccountForm() {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Form.Group className="mb-0">
+            <Form.Group className="mb-0" controlId="originalOwnerRMDStarted">
               <Form.Check
                 type="checkbox"
                 label="Original owner had already started taking RMDs"
@@ -361,7 +361,7 @@ function AccountForm() {
         )}
 
         <div className="mb-4">
-          <Form.Group className="mb-0">
+          <Form.Group className="mb-0" controlId="notes">
             <Form.Label>Notes</Form.Label>
             <Form.Control
               as="textarea"
