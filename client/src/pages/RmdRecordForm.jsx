@@ -83,7 +83,7 @@ function RmdRecordForm() {
       {error && <Alert variant="danger">{error}</Alert>}
       <Form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="year">
             <Form.Label>Year</Form.Label>
             <Form.Control
               type="number"
@@ -94,7 +94,7 @@ function RmdRecordForm() {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="rmdAmount">
             <Form.Label>RMD Amount ($)</Form.Label>
             <Form.Control
               type="number"
@@ -105,7 +105,7 @@ function RmdRecordForm() {
             />
           </Form.Group>
 
-          <Form.Group className="mb-0">
+          <Form.Group className="mb-0" controlId="amountTakenOrProjected">
             <Form.Label>Amount Taken / Projected ($)</Form.Label>
             <Form.Control
               type="number"
@@ -117,7 +117,7 @@ function RmdRecordForm() {
         </div>
 
         <div className="mb-4">
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="rmdAmountEnteredBy">
             <Form.Label>RMD Amount Entered By</Form.Label>
             <Form.Control
               name="rmdAmountEnteredBy"
@@ -127,7 +127,7 @@ function RmdRecordForm() {
             />
           </Form.Group>
 
-          <Form.Group className="mb-0">
+          <Form.Group className="mb-0" controlId="notes">
             <Form.Label>Notes</Form.Label>
             <Form.Control
               as="textarea"
