@@ -162,7 +162,10 @@ function AccountsByCompany() {
                 <td>{account.company}</td>
                 <td>
                   <Link to={`/clients/${account.clientId}`}>
-                    {account.client.lastName}, {account.client.firstName}
+                    {account.client.firstName?.trim() ||
+                    account.client.lastName?.trim()
+                      ? `${account.client.lastName}, ${account.client.firstName}`
+                      : "Unnamed Client"}
                   </Link>
                 </td>
                 <td>{account.accountType}</td>
@@ -187,7 +190,11 @@ function AccountsByCompany() {
                   <Link
                     to={`/accounts/${account._id}`}
                     className="btn btn-sm btn-primary"
-                    aria-label={`View account ${account.primaryAccountNumber} for ${account.client.firstName} ${account.client.lastName}`}
+                    aria-label={`View account ${account.primaryAccountNumber} for ${
+                      account.client.firstName || account.client.lastName
+                        ? `${account.client.firstName} ${account.client.lastName}`
+                        : "Unnamed Client"
+                    }`}
                   >
                     View
                   </Link>

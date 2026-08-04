@@ -298,7 +298,9 @@ function Dashboard() {
               <tr key={row._id}>
                 <td>
                   <Link to={`/clients/${row._id}`}>
-                    {row.client.firstName} {row.client.lastName}
+                    {row.client.firstName?.trim() || row.client.lastName?.trim()
+                      ? `${row.client.firstName} ${row.client.lastName}`
+                      : "Unnamed Client"}
                   </Link>
                 </td>
                 <td>{row.client.advisorName}</td>
