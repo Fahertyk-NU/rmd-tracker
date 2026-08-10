@@ -46,6 +46,12 @@ function ClientForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (formData.dateOfBirth && new Date(formData.dateOfBirth) > new Date()) {
+      setError("Date of birth cannot be in the future.");
+      return;
+    }
+
     const url = isEdit ? `/api/clients/${id}` : "/api/clients";
     const method = isEdit ? "PUT" : "POST";
 
