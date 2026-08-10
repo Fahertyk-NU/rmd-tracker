@@ -11,6 +11,7 @@ function AccountsByCompany() {
   const [filterCompany, setFilterCompany] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortBy, setSortBy] = useState("company");
+  const [search, setSearch] = useState("");
 
   usePageTitle("Accounts by Company");
 
@@ -43,7 +44,9 @@ function AccountsByCompany() {
     const matchesStatus =
       filterStatus === "all" ||
       (a.rmdRecord?.distributionStatus || "pending") === filterStatus;
-    return matchesCompany && matchesStatus;
+    const fullName = `${a.client.firstName} ${a.client.lastName}`.toLowerCase();
+    const matchesSearch = fullName.includes(search.toLowerCase());
+    return matchesCompany && matchesStatus && matchesSearch;
   });
 
   const sorted = [...filtered].sort((a, b) => {
@@ -69,7 +72,18 @@ function AccountsByCompany() {
     <Container className="mt-4">
       <h1 className="page-title mb-4">Accounts by Company</h1>
       <Row className="mb-4 g-2">
-        <Col xs={6} md={3}>
+        <Col xs={12} md={4}>
+          <Form.Label htmlFor="client-search-abc" className="visually-hidden">
+            Search by client name
+          </Form.Label>
+          <Form.Control
+            id="client-search-abc"
+            placeholder="Search by client name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </Col>
+        <Col xs={6} md={2}>
           <Form.Label htmlFor="year-filter" className="visually-hidden">
             Filter by year
           </Form.Label>
@@ -88,7 +102,7 @@ function AccountsByCompany() {
             ))}
           </Form.Select>
         </Col>
-        <Col xs={6} md={3}>
+        <Col xs={6} md={2}>
           <Form.Label htmlFor="company-filter" className="visually-hidden">
             Filter by company
           </Form.Label>
@@ -105,7 +119,7 @@ function AccountsByCompany() {
             ))}
           </Form.Select>
         </Col>
-        <Col xs={6} md={3}>
+        <Col xs={6} md={2}>
           <Form.Label htmlFor="status-filter-abc" className="visually-hidden">
             Filter by status
           </Form.Label>
@@ -121,7 +135,7 @@ function AccountsByCompany() {
             <option value="fulfilled">Fulfilled</option>
           </Form.Select>
         </Col>
-        <Col xs={6} md={3}>
+        <Col xs={6} md={2}>
           <Form.Label htmlFor="sort-by" className="visually-hidden">
             Sort by
           </Form.Label>
