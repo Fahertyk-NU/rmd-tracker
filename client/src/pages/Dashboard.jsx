@@ -11,19 +11,21 @@ import {
   Collapse,
   Button,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
 import "./Dashboard.css";
 import usePageTitle from "../hooks/usePageTitle";
+import { Link, useSearchParams } from "react-router-dom";
 
 function Dashboard() {
   const [summary, setSummary] = useState([]);
-  const [year, setYear] = useState(new Date().getFullYear());
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [filterAdvisor, setFilterAdvisor] = useState("all");
-  const [filterStatus, setFilterStatus] = useState("all");
   const [showHelp, setShowHelp] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const year = parseInt(searchParams.get("year")) || new Date().getFullYear();
+  const search = searchParams.get("search") || "";
+  const filterAdvisor = searchParams.get("advisor") || "all";
+  const filterStatus = searchParams.get("status") || "all";
 
   usePageTitle("Dashboard");
 
@@ -39,6 +41,16 @@ function Dashboard() {
         setLoading(false);
       });
   }, [year]);
+
+  const updateParam = (key, value) => {
+    const params = new URLSearchParams(searchParams);
+    if (!value || value === "all") {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+    setSearchParams(params);
+  };
 
   const currentYear = new Date().getFullYear();
   const yearOptions = [
@@ -224,7 +236,7 @@ function Dashboard() {
             value={year}
             onChange={(e) => {
               setLoading(true);
-              setYear(parseInt(e.target.value));
+              updateParam("year", e.target.value);
             }}
           >
             {yearOptions.map((y) => (
@@ -242,7 +254,7 @@ function Dashboard() {
             id="client-search"
             placeholder="Search by client name..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => updateParam("search", e.target.value)}
           />
         </Col>
         <Col md={3}>
@@ -252,7 +264,7 @@ function Dashboard() {
           <Form.Select
             id="advisor-select"
             value={filterAdvisor}
-            onChange={(e) => setFilterAdvisor(e.target.value)}
+            onChange={(e) => updateParam("advisor", e.target.value)}
           >
             <option value="all">All Advisors</option>
             {advisors.map((a) => (
@@ -269,7 +281,7 @@ function Dashboard() {
           <Form.Select
             id="status-filter"
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
+            onChange={(e) => updateParam("status", e.target.value)}
           >
             <option value="all">All Statuses</option>
             <option value="action-required">Action Required</option>

@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Badge, Row, Col, Card } from "react-bootstrap";
+import {
+  Container,
+  Table,
+  Badge,
+  Row,
+  Col,
+  Card,
+  Button,
+} from "react-bootstrap";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
 // eslint-disable-next-line no-unused-vars
@@ -50,9 +58,9 @@ function ClientDetail() {
 
   return (
     <Container className="mt-4">
-      <Link to="/" className="btn btn-secondary mb-3">
+      <Button variant="secondary" className="mb-3" onClick={() => navigate(-1)}>
         ← Back to Dashboard
-      </Link>
+      </Button>
       {client && (
         <>
           <Link
