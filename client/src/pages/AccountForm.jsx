@@ -69,6 +69,12 @@ function AccountForm() {
     }
   }, [id, isEdit]);
 
+  useEffect(() => {
+    if (error) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [error]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -79,6 +85,25 @@ function AccountForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (formData.accountType === "Inherited IRA") {
+      if (
+        formData.originalOwnerDOB &&
+        new Date(formData.originalOwnerDOB) > new Date()
+      ) {
+        setError("Original owner's date of birth cannot be in the future.");
+        return;
+      }
+      if (
+        formData.dateOfDeath &&
+        formData.originalOwnerDOB &&
+        new Date(formData.dateOfDeath) < new Date(formData.originalOwnerDOB)
+      ) {
+        setError("Date of death cannot be before date of birth.");
+        return;
+      }
+    }
+
     const url = isEdit ? `/api/accounts/${id}` : "/api/accounts";
     const method = isEdit ? "PUT" : "POST";
     const body = isEdit ? formData : { ...formData, clientId };
