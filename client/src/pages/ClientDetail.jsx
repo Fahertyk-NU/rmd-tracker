@@ -165,20 +165,12 @@ function ClientDetail() {
                       )}
                     </td>
                     <td>
-                      <div className="d-flex flex-wrap gap-2">
-                        <Link
-                          to={`/accounts/${account._id}`}
-                          className="btn btn-sm btn-primary"
-                        >
-                          View
-                        </Link>
-                        <Link
-                          to={`/accounts/${account._id}/edit`}
-                          className="btn btn-sm btn-outline-secondary"
-                        >
-                          Edit
-                        </Link>
-                      </div>
+                      <Link
+                        to={`/accounts/${account._id}`}
+                        className="btn btn-sm btn-primary"
+                      >
+                        View
+                      </Link>
                     </td>
                   </tr>
                 ))}
