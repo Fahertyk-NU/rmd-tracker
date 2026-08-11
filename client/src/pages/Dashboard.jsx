@@ -52,6 +52,33 @@ function Dashboard() {
     setSearchParams(params);
   };
 
+  const handleGenerateNewYear = () => {
+    if (
+      !window.confirm(
+        `Generate RMD records for ${year} for all active/inherited accounts that don't already have one?`,
+      )
+    )
+      return;
+
+    fetch("/api/rmdRecords/newYear", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ year }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert(data.message);
+        setLoading(true);
+        return fetch(`/api/dashboard?year=${year}`);
+      })
+      .then((res) => res.json())
+      .then((summaryData) => {
+        setSummary(summaryData);
+        setLoading(false);
+      })
+      .catch(() => alert("Failed to generate records."));
+  };
+
   const currentYear = new Date().getFullYear();
   const yearOptions = [
     currentYear - 2,
@@ -94,9 +121,18 @@ function Dashboard() {
         >
           {showHelp ? "Hide Help" : "How to Use"}
         </Button>
+
         <Link to="/clients/new" className="btn btn-success btn-sm ms-2">
           + Add Client
         </Link>
+        <Button
+          variant="outline-primary"
+          size="sm"
+          className="ms-2"
+          onClick={handleGenerateNewYear}
+        >
+          Generate {year} Records
+        </Button>
         <Collapse in={showHelp}>
           <div id="help-section">
             <Alert variant="info" className="mt-2">
