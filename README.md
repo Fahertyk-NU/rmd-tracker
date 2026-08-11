@@ -4,7 +4,7 @@
 **Class:** [CS5610 Web Development – Northeastern University](https://johnguerra.co/classes/webDevelopment_online_summer_2026/) \
 **Deployed App:** https://rmd-tracker.onrender.com \
 **Design Document:** [View Design Document](DESIGN.pdf) \
-**Narrated Demo:** https://youtu.be/fJpINUp61VE 
+**Narrated Demo:** UPDATE WITH NEW DEMO
 
 ## Project Objective
 
@@ -95,6 +95,6 @@ npm run dev
 
 ## AI Usage Disclosure
 
-**Kaylee Faherty:** Claude Sonnet (Anthropic, claude-sonnet-4-6) was used throughout this project as a learning guide and coding assistant. It was used to explain concepts, talk through architectural decisions, troubleshoot errors, and suggest approaches as I built out the Express/MongoDB backend, React frontend, and CSS. All generated code was carefully reviewed, tested, and understood before being committed. Key prompts included project planning, setting up the Express/MongoDB architecture, implementing CRUD routes, designing the RMD status logic and aggregation pipeline, and building the accounts by company workflow view. Domain knowledge and all financial services concepts came from my own professional experience.
+**Kaylee Faherty:** Claude Sonnet (Anthropic, claude-sonnet-4-6) was used throughout this project as a learning guide and coding assistant. It was used to explain concepts, talk through architectural decisions, troubleshoot errors, and suggest approaches as I built out the Express/MongoDB backend, React frontend, and CSS. All generated code was carefully reviewed, tested, and understood before being committed. Key prompts included project planning, setting up the Express/MongoDB architecture, implementing CRUD routes, designing the RMD status logic and aggregation pipeline, and building the accounts by company workflow view. I also used it to work through accessibility improvements (color contrast, keyboard navigation, semantic HTML structure), establish a consistent design and typography system, and incorporate findings from usability testing and peer code review. I tested and verified everything myself before including it, rather than accepting suggestions outright. Domain knowledge and all financial services concepts came from my own professional experience.
 
 **Haotian Qian:** Claude was used throughout this project as a learning guide and coding assistant. It was used to explain concepts, talk through architectural decisions, troubleshoot errors, and suggest approaches as I built out the clients CRUD routes and pages, fixed the dashboard aggregation logic. All generated code was carefully reviewed, tested, and understood before being committed.
