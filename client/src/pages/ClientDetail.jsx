@@ -98,7 +98,10 @@ function ClientDetail() {
                   <p className="mb-2">
                     <strong>Date of Birth:</strong>{" "}
                     {client.dateOfBirth
-                      ? new Date(client.dateOfBirth).toLocaleDateString()
+                      ? (() => {
+                        const [year, month, day] = client.dateOfBirth.slice(0, 10).split("-");
+                        return `${Number(month)}/${Number(day)}/${year}`;
+                        })()
                       : "—"}
                   </p>
                   <p className="mb-2">
