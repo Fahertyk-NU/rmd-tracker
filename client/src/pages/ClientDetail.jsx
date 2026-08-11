@@ -58,7 +58,7 @@ function ClientDetail() {
 
   return (
     <Container className="mt-4">
-      <Button variant="secondary" className="mb-3" onClick={() => navigate(-1)}>
+      <Button variant="secondary" className="mb-3" onClick={() => navigate("/")}>
         ← Back to Dashboard
       </Button>
       {client && (
