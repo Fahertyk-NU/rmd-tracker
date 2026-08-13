@@ -7,8 +7,9 @@ import {
   Col,
   Card,
   Button,
+  Alert,
 } from "react-bootstrap";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
 // eslint-disable-next-line no-unused-vars
 import PropTypes from "prop-types";
@@ -16,10 +17,21 @@ import PropTypes from "prop-types";
 function ClientDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [client, setClient] = useState(null);
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showSaved, setShowSaved] = useState(
+    Boolean(location.state?.saved),
+  );
   const year = new Date().getFullYear();
+
+  useEffect(() => {
+    if (location.state?.saved) {
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     Promise.all([
@@ -61,6 +73,15 @@ function ClientDetail() {
       <Button variant="secondary" className="mb-3" onClick={() => navigate("/")}>
         ← Back to Dashboard
       </Button>
+      {showSaved && (
+        <Alert
+          variant="success"
+          dismissible
+          onClose={() => setShowSaved(false)}
+        >
+          Client saved successfully.
+        </Alert>
+      )}
       {client && (
         <>
           <Link

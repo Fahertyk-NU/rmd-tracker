@@ -63,7 +63,7 @@ function ClientForm() {
       .then((res) => res.json())
       .then((data) => {
         if (isEdit) {
-          navigate(`/clients/${id}`);
+          navigate(`/clients/${id}`, { state: { saved: true } });
         } else {
           navigate(`/clients/${data.insertedId}`);
         }
@@ -83,7 +83,7 @@ function ClientForm() {
       <h1>{isEdit ? "Edit Client" : "Add Client"}</h1>
       {error && <Alert variant="danger">{error}</Alert>}
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3" controlId="firstName">
           <Form.Label>First Name</Form.Label>
           <Form.Control
             name="firstName"
@@ -93,7 +93,7 @@ function ClientForm() {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3" controlId="lastName">
           <Form.Label>Last Name</Form.Label>
           <Form.Control
             name="lastName"
@@ -103,7 +103,7 @@ function ClientForm() {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3" controlId="dateOfBirth">
           <Form.Label>Date of Birth</Form.Label>
           <Form.Control
             type="date"
@@ -113,7 +113,7 @@ function ClientForm() {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
@@ -123,7 +123,7 @@ function ClientForm() {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3" controlId="phone">
           <Form.Label>Phone</Form.Label>
           <Form.Control
             name="phone"
@@ -132,7 +132,7 @@ function ClientForm() {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3" controlId="advisorName">
           <Form.Label>Advisor</Form.Label>
           <Form.Control
             name="advisorName"
@@ -141,7 +141,7 @@ function ClientForm() {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3" controlId="status">
           <Form.Label>Status</Form.Label>
           <Form.Select
             name="status"
@@ -154,7 +154,7 @@ function ClientForm() {
           </Form.Select>
         </Form.Group>
 
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3" controlId="notes">
           <Form.Label>Notes</Form.Label>
           <Form.Control
             as="textarea"
